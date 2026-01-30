@@ -1,96 +1,160 @@
-// backend/src/models/User.js
-const db = require('../config/db');
+// apps/api/src/models/User.js
+const { prisma } = require('@lapancomido/database');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
-const schema = process.env.DB_SCHEMA;
 
 const createUser = async (userData) => {
-    if (!userData.password) {
-        throw new Error("Password is required");
-    }
-    // Hashea la contraseña
-    const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS);
-    const query = `
-      INSERT INTO ${schema}.users (name, lastname, mail, password)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id, name, lastname, mail, password, role_id, created_at, updated_at
-    `;
-    const values = [
-        userData.name,
-        userData.lastname,
-        userData.mail,
-        hashedPassword
-    ];
-    const { rows } = await db.query(query, values);
-    return rows[0];
+  if (!userData.password) {
+    throw new Error("Password is required");
+  }
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(userData.password, SALT_ROUNDS);
+  
+  const user = await prisma.users.create({
+    data: {
+      name: userData.name,
+      lastname: userData.lastname,
+      mail: userData.mail,
+      password: hashedPassword,
+    },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      mail: true,
+      password: true,
+      role_id: true,
+      created_at: true,
+      updated_at: true,
+    },
+  });
+  return user;
 };
 
 const updateUser = async (id, userData) => {
-    const query = `
-      UPDATE ${schema}.users
-      SET name = $1,
-          lastname = $2,
-          mail = $3,
-          password = COALESCE($4, password),
-          phone = $5,
-          rut = $6,
-          updated_at = NOW()
-      WHERE id = $7
-      RETURNING id, name, lastname, mail, phone, rut, role_id, created_at, updated_at
-    `;
-    const values = [
-        userData.name,
-        userData.lastname,
-        userData.mail,
-        userData.password || null, // si no se envía password, se mantiene el valor anterior
-        userData.phone,
-        userData.rut,
-        id,
-    ];
-    const { rows } = await db.query(query, values);
-    return rows[0];
+  const user = await prisma.users.update({
+    where: { id: parseInt(id) },
+    data: {
+      name: userData.name,
+      lastname: userData.lastname,
+      mail: userData.mail,
+      password: userData.password || undefined, // Only update if provided
+      phone: userData.phone,
+      rut: userData.rut,
+      updated_at: new Date(),
+    },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      mail: true,
+      phone: true,
+      rut: true,
+      role_id: true,
+      created_at: true,
+      updated_at: true,
+    },
+  });
+  return user;
 };
 
 const findUserByRut = async (rut) => {
-    const query = `
-      SELECT u.id, u.name, u.lastname, u.mail, u.password, u.role_id, u.phone, u.rut, u.created_at, u.updated_at,
-             r.role as role
-      FROM ${schema}.users u
-      LEFT JOIN ${schema}.roles r ON u.role_id = r.id
-      WHERE rut = $1
-    `;
-    const { rows } = await db.query(query, [rut]);
-    return rows[0];
+  const user = await prisma.users.findFirst({
+    where: { rut },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      mail: true,
+      password: true,
+      role_id: true,
+      phone: true,
+      rut: true,
+      created_at: true,
+      updated_at: true,
+      role: {
+        select: {
+          role: true,
+        },
+      },
+    },
+  });
+  
+  if (!user) return null;
+  
+  // Flatten the role
+  return {
+    ...user,
+    role: user.role?.role,
+  };
 };
 
 const findUserByMail = async (mail) => {
-    const query = `
-      SELECT u.id, u.name, u.lastname, u.mail, u.password, u.role_id, u.phone, u.rut, u.created_at, u.updated_at,
-             r.role as role
-      FROM ${schema}.users u
-      LEFT JOIN ${schema}.roles r ON u.role_id = r.id
-      WHERE u.mail = $1
-    `;
-    const { rows } = await db.query(query, [mail]);
-    return rows[0];
+  const user = await prisma.users.findUnique({
+    where: { mail },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      mail: true,
+      password: true,
+      role_id: true,
+      phone: true,
+      rut: true,
+      created_at: true,
+      updated_at: true,
+      role: {
+        select: {
+          role: true,
+        },
+      },
+    },
+  });
+  
+  if (!user) return null;
+  
+  // Flatten the role
+  return {
+    ...user,
+    role: user.role?.role,
+  };
 };
 
 const findUserById = async (id) => {
-    const query = `
-      SELECT u.id, u.name, u.lastname, u.mail, u.password, u.role_id, u.phone, u.rut, u.created_at, u.updated_at,
-             r.role as role
-      FROM ${schema}.users u
-      LEFT JOIN ${schema}.roles r ON u.role_id = r.id
-      WHERE u.id = $1
-    `;
-    const { rows } = await db.query(query, [id]);
-    return rows[0];
+  const user = await prisma.users.findUnique({
+    where: { id: parseInt(id) },
+    select: {
+      id: true,
+      name: true,
+      lastname: true,
+      mail: true,
+      password: true,
+      role_id: true,
+      phone: true,
+      rut: true,
+      created_at: true,
+      updated_at: true,
+      role: {
+        select: {
+          role: true,
+        },
+      },
+    },
+  });
+  
+  if (!user) return null;
+  
+  // Flatten the role
+  return {
+    ...user,
+    role: user.role?.role,
+  };
 };
 
 module.exports = {
-    createUser,
-    findUserByMail,
-    findUserById,
-    updateUser,
-    findUserByRut,
+  createUser,
+  findUserByMail,
+  findUserById,
+  updateUser,
+  findUserByRut,
 };

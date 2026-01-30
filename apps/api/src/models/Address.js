@@ -1,137 +1,169 @@
-// src/models/Address.js
-const db = require('../config/db');
-const schema = process.env.DB_SCHEMA;
+// apps/api/src/models/Address.js
+const { prisma } = require('@lapancomido/database');
 
 const createAddress = async (addressData) => {
-  const query = `
-    INSERT INTO ${schema}.address (id_user, id_city, address, postal_code, main)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING *
-  `;
-  const values = [
-    addressData.id_user,
-    addressData.id_city,
-    addressData.address,
-    addressData.postal_code || null,
-    addressData.main || false,
-  ];
-  const { rows } = await db.query(query, values);
-  return rows[0];
+  const address = await prisma.address.create({
+    data: {
+      id_user: addressData.id_user,
+      id_city: addressData.id_city,
+      address: addressData.address,
+      postal_code: addressData.postal_code || null,
+      main: addressData.main || false,
+    },
+  });
+  return address;
 };
 
 const getMainAddress = async (id_user) => {
-  const query = `
-    SELECT 
-      a.*,
-      c.city AS city,
-      c.id AS cityId,
-      p.province AS province,
-      p.id AS provinceId,
-      r.region AS region,
-      r.id AS regionId
-    FROM ${schema}.address a
-    JOIN ${schema}.cities c ON a.id_city = c.id
-    JOIN ${schema}.provinces p ON c.id_province = p.id
-    JOIN ${schema}.regions r ON p.id_region = r.id
-    WHERE a.id_user = $1 AND a.main = true
-    LIMIT 1
-  `;
-  const { rows } = await db.query(query, [id_user]);
-  return rows[0];
+  const address = await prisma.address.findFirst({
+    where: {
+      id_user: parseInt(id_user),
+      main: true,
+    },
+    include: {
+      city: {
+        include: {
+          province: {
+            include: {
+              region: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!address) return null;
+
+  // Flatten to match original response format
+  return {
+    ...address,
+    city: address.city.city,
+    cityId: address.city.id,
+    province: address.city.province.province,
+    provinceId: address.city.province.id,
+    region: address.city.province.region.region,
+    regionId: address.city.province.region.id,
+  };
 };
 
 const getAddresses = async (id_user) => {
-  const query = `
-    SELECT 
-      a.*,
-      c.city AS city,
-      c.id AS cityId,
-      p.province AS province,
-      p.id AS provinceId,
-      r.region AS region,
-      r.id AS regionId
-    FROM ${schema}.address a
-    JOIN ${schema}.cities c ON a.id_city = c.id
-    JOIN ${schema}.provinces p ON c.id_province = p.id
-    JOIN ${schema}.regions r ON p.id_region = r.id
-    WHERE a.id_user = $1
-    ORDER BY a.created_at DESC
-  `;
-  const { rows } = await db.query(query, [id_user]);
-  return rows;
+  const addresses = await prisma.address.findMany({
+    where: { id_user: parseInt(id_user) },
+    include: {
+      city: {
+        include: {
+          province: {
+            include: {
+              region: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { created_at: 'desc' },
+  });
+
+  // Flatten to match original response format
+  return addresses.map((address) => ({
+    ...address,
+    city: address.city.city,
+    cityId: address.city.id,
+    province: address.city.province.province,
+    provinceId: address.city.province.id,
+    region: address.city.province.region.region,
+    regionId: address.city.province.region.id,
+  }));
 };
 
 const getAddressById = async (id, id_user) => {
-  const query = `
-    SELECT 
-      a.*,
-      c.city AS city,
-      c.id AS cityId,
-      p.province AS province,
-      p.id AS provinceId,
-      r.region AS region,
-      r.id AS regionId
-    FROM ${schema}.address a
-    JOIN ${schema}.cities c ON a.id_city = c.id
-    JOIN ${schema}.provinces p ON c.id_province = p.id
-    JOIN ${schema}.regions r ON p.id_region = r.id
-    WHERE a.id = $1 AND a.id_user = $2
-  `;
-  const { rows } = await db.query(query, [id, id_user]);
-  return rows[0];
+  const address = await prisma.address.findFirst({
+    where: {
+      id: parseInt(id),
+      id_user: parseInt(id_user),
+    },
+    include: {
+      city: {
+        include: {
+          province: {
+            include: {
+              region: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!address) return null;
+
+  // Flatten to match original response format
+  return {
+    ...address,
+    city: address.city.city,
+    cityId: address.city.id,
+    province: address.city.province.province,
+    provinceId: address.city.province.id,
+    region: address.city.province.region.region,
+    regionId: address.city.province.region.id,
+  };
 };
 
 const updateAddress = async (addressId, id_user, addressData) => {
-  const query = `
-    UPDATE ${schema}.address
-    SET id_city = $1,
-        address = $2,
-        postal_code = $3,
-        main = $4,
-        updated_at = NOW()
-    WHERE id = $5 AND id_user = $6
-    RETURNING *
-  `;
-  const values = [
-    addressData.id_city,
-    addressData.address,
-    addressData.postal_code || null,
-    addressData.main,
-    addressId,
-    id_user,
-  ];
-  const { rows } = await db.query(query, values);
-  return rows[0];
+  const address = await prisma.address.updateMany({
+    where: {
+      id: parseInt(addressId),
+      id_user: parseInt(id_user),
+    },
+    data: {
+      id_city: addressData.id_city,
+      address: addressData.address,
+      postal_code: addressData.postal_code || null,
+      main: addressData.main,
+      updated_at: new Date(),
+    },
+  });
+
+  // Return the updated address if found
+  if (address.count === 0) return null;
+  
+  return prisma.address.findUnique({
+    where: { id: parseInt(addressId) },
+  });
 };
 
 const deleteAddress = async (addressId, id_user) => {
-  const query = `
-    DELETE FROM ${schema}.address
-    WHERE id = $1 AND id_user = $2
-    RETURNING *
-  `;
-  const { rows } = await db.query(query, [addressId, id_user]);
-  return rows[0];
+  // First find the address to return it
+  const address = await prisma.address.findFirst({
+    where: {
+      id: parseInt(addressId),
+      id_user: parseInt(id_user),
+    },
+  });
+
+  if (!address) return null;
+
+  await prisma.address.delete({
+    where: { id: parseInt(addressId) },
+  });
+
+  return address;
 };
 
 const unsetMainForOtherAddresses = async (id_user, excludeAddressId = null) => {
-  let query, values;
+  const where = { id_user: parseInt(id_user) };
+  
   if (excludeAddressId) {
-    query = `
-      UPDATE ${schema}.address
-      SET main = false, updated_at = NOW()
-      WHERE id_user = $1 AND id <> $2
-    `;
-    values = [id_user, excludeAddressId];
-  } else {
-    query = `
-      UPDATE ${schema}.address
-      SET main = false, updated_at = NOW()
-      WHERE id_user = $1
-    `;
-    values = [id_user];
+    where.NOT = { id: parseInt(excludeAddressId) };
   }
-  await db.query(query, values);
+
+  await prisma.address.updateMany({
+    where,
+    data: {
+      main: false,
+      updated_at: new Date(),
+    },
+  });
 };
 
 module.exports = {

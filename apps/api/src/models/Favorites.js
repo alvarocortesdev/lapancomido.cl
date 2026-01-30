@@ -1,38 +1,61 @@
-// src/models/Favorites.js
-
-const db = require('../config/db');
-const schema = process.env.DB_SCHEMA;
+// apps/api/src/models/Favorites.js
+const { prisma } = require('@lapancomido/database');
 
 const addFavorite = async (userId, productId) => {
-  const query = `
-    INSERT INTO ${schema}.favorites (id_user, id_product)
-    VALUES ($1, $2)
-    ON CONFLICT (id_user, id_product) DO NOTHING
-    RETURNING *
-  `;
-  const { rows } = await db.query(query, [userId, productId]);
-  return rows[0];
+  // Use upsert to handle the ON CONFLICT behavior
+  const favorite = await prisma.favorites.upsert({
+    where: {
+      id_user_id_product: {
+        id_user: parseInt(userId),
+        id_product: parseInt(productId),
+      },
+    },
+    update: {}, // Do nothing on conflict
+    create: {
+      id_user: parseInt(userId),
+      id_product: parseInt(productId),
+    },
+  });
+  return favorite;
 };
 
 const removeFavorite = async (userId, productId) => {
-  const query = `
-    DELETE FROM ${schema}.favorites
-    WHERE id_user = $1 AND id_product = $2
-    RETURNING *
-  `;
-  const { rows } = await db.query(query, [userId, productId]);
-  return rows[0];
+  // Find first to check if exists
+  const favorite = await prisma.favorites.findUnique({
+    where: {
+      id_user_id_product: {
+        id_user: parseInt(userId),
+        id_product: parseInt(productId),
+      },
+    },
+  });
+
+  if (!favorite) return null;
+
+  await prisma.favorites.delete({
+    where: {
+      id_user_id_product: {
+        id_user: parseInt(userId),
+        id_product: parseInt(productId),
+      },
+    },
+  });
+
+  return favorite;
 };
 
 const getFavorites = async (userId) => {
-  const query = `
-    SELECT p.*
-    FROM ${schema}.favorites f
-    JOIN ${schema}.products p ON f.id_product = p.id
-    WHERE f.id_user = $1 AND p.available = true
-  `;
-  const { rows } = await db.query(query, [userId]);
-  return rows;
+  const favorites = await prisma.favorites.findMany({
+    where: { id_user: parseInt(userId) },
+    include: {
+      product: true,
+    },
+  });
+
+  // Return only available products, flattened
+  return favorites
+    .filter((fav) => fav.product.available)
+    .map((fav) => fav.product);
 };
 
 module.exports = {
@@ -40,4 +63,3 @@ module.exports = {
   removeFavorite,
   getFavorites,
 };
-
