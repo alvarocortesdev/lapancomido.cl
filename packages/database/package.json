@@ -2,15 +2,33 @@
   "name": "@lapancomido/database",
   "version": "1.0.0",
   "type": "module",
-  "main": "src/index.js",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
   },
   "scripts": {
+    "generate": "prisma generate",
+    "db:pull": "prisma db pull",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate || true",
     "build": "echo 'No build step for database package'",
-    "lint": "eslint src --ext js",
-    "clean": "echo 'No clean step for database package'"
+    "lint": "eslint src --ext ts",
+    "clean": "rm -rf src/generated"
   },
-  "dependencies": {},
-  "peerDependencies": {}
+  "dependencies": {
+    "@prisma/client": "^6.3.0",
+    "@prisma/adapter-pg": "^6.3.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "prisma": "^6.3.0",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0",
+    "@types/pg": "^8.11.0"
+  }
 }

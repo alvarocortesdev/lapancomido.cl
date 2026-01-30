@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/client"
+  previewFeatures = []
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["pancomido"]
+}
+
+// ============================================
+// Core Domain Models
+// ============================================
+
+model products {
+  id          Int       @id @default(autoincrement())
+  product     String
+  ingredients String?
+  price       Decimal   @db.Decimal(10, 2)
+  weight      String?
+  description String?
+  nutrition   String?
+  available   Boolean   @default(false)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+
+  // Relations
+  stock     stock[]
+  favorites favorites[]
+
+  @@schema("pancomido")
+}
+
+model stock {
+  id         Int      @id @default(autoincrement())
+  id_product Int
+  stock      Int      @default(0)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  // Relations
+  product products @relation(fields: [id_product], references: [id], onDelete: Cascade)
+
+  @@schema("pancomido")
+}
+
+// ============================================
+// User & Authentication Models
+// ============================================
+
+model users {
+  id         Int       @id @default(autoincrement())
+  name       String
+  lastname   String
+  mail       String    @unique
+  password   String
+  phone      String?
+  rut        String?   @unique
+  role_id    Int       @default(1)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+
+  // Relations
+  role      roles       @relation(fields: [role_id], references: [id])
+  addresses address[]
+  favorites favorites[]
+
+  @@schema("pancomido")
+}
+
+model roles {
+  id         Int      @id @default(autoincrement())
+  role       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  // Relations
+  users users[]
+
+  @@schema("pancomido")
+}
+
+model favorites {
+  id         Int      @id @default(autoincrement())
+  id_user    Int
+  id_product Int
+  created_at DateTime @default(now())
+
+  // Relations
+  user    users    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  product products @relation(fields: [id_product], references: [id], onDelete: Cascade)
+
+  @@unique([id_user, id_product])
+  @@schema("pancomido")
+}
+
+// ============================================
+// Address & Location Models
+// ============================================
+
+model address {
+  id          Int      @id @default(autoincrement())
+  id_user     Int
+  id_city     Int
+  address     String
+  postal_code String?
+  main        Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  // Relations
+  user users  @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  city cities @relation(fields: [id_city], references: [id])
+
+  @@schema("pancomido")
+}
+
+model cities {
+  id          Int      @id @default(autoincrement())
+  city        String
+  id_province Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  // Relations
+  province  provinces @relation(fields: [id_province], references: [id])
+  addresses address[]
+
+  @@schema("pancomido")
+}
+
+model provinces {
+  id         Int      @id @default(autoincrement())
+  province   String
+  id_region  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  // Relations
+  region regions  @relation(fields: [id_region], references: [id])
+  cities cities[]
+
+  @@schema("pancomido")
+}
+
+model regions {
+  id         Int      @id @default(autoincrement())
+  region     String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  // Relations
+  provinces provinces[]
+
+  @@schema("pancomido")
+}
