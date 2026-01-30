@@ -88,14 +88,14 @@ Requirements para release inicial. Cada uno mapea a fases del roadmap.
 
 ### Infraestructura
 
-- [ ] **INFRA-01**: Base de datos migrada de SQL raw a Prisma ORM
-- [ ] **INFRA-02**: Estructura Turborepo con apps/web, apps/admin, apps/api
-- [ ] **INFRA-03**: Paquetes compartidos: packages/database, packages/shared
+- [x] **INFRA-01**: Base de datos migrada de SQL raw a Prisma ORM ✓
+- [x] **INFRA-02**: Estructura Turborepo con apps/web, apps/admin, apps/api ✓
+- [x] **INFRA-03**: Paquetes compartidos: packages/database, packages/shared ✓
 - [ ] **INFRA-04**: API desplegada en api.lapancomido.cl
 - [ ] **INFRA-05**: Sitio público desplegado en lapancomido.cl
 - [ ] **INFRA-06**: Admin desplegado en admin.lapancomido.cl
-- [ ] **INFRA-07**: CI/CD configurado con GitHub Actions → Vercel
-- [ ] **INFRA-08**: Lighthouse CI ejecutándose en cada PR
+- [x] **INFRA-07**: CI/CD configurado con GitHub Actions → Vercel ✓
+- [x] **INFRA-08**: Lighthouse CI ejecutándose en cada PR ✓
 
 ## v2 Requirements
 
@@ -150,11 +150,11 @@ Qué fases cubren qué requisitos.
 ### Phase 1: Fundación & Migración DB
 | Requirement | Status |
 |-------------|--------|
-| INFRA-01 | Pending |
-| INFRA-02 | Pending |
-| INFRA-03 | Pending |
-| INFRA-07 | Pending |
-| INFRA-08 | Pending |
+| INFRA-01 | Complete ✓ |
+| INFRA-02 | Complete ✓ |
+| INFRA-03 | Complete ✓ |
+| INFRA-07 | Complete ✓ |
+| INFRA-08 | Complete ✓ |
 
 ### Phase 2: Sistema de Cotización
 | Requirement | Status |
