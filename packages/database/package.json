@@ -1,0 +1,16 @@
+{
+  "name": "@lapancomido/database",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "build": "echo 'No build step for database package'",
+    "lint": "eslint src --ext js",
+    "clean": "echo 'No clean step for database package'"
+  },
+  "dependencies": {},
+  "peerDependencies": {}
+}
