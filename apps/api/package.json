@@ -9,10 +9,11 @@
     "start": "node index.js",
     "build": "echo 'No build step for API'",
     "test": "jest --coverage",
-    "lint": "eslint src --ext js",
+    "lint": "eslint src",
     "clean": "rm -rf node_modules/.cache"
   },
   "dependencies": {
+    "@eslint/js": "^9.39.2",
     "@lapancomido/database": "*",
     "@lapancomido/shared": "*",
     "bcrypt": "^5.1.1",
@@ -20,6 +21,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "globals": "^15.15.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",

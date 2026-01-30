@@ -1,5 +1,5 @@
 // src/helpers/validateRut.helper.js
-export const validaRut = (rutCompleto) => {
+const validaRut = (rutCompleto) => {
     // Valida el formato: solo números, un guion y luego un dígito o "k/K"
     if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rutCompleto)) return false;
     const [rut, dvInput] = rutCompleto.split('-');
@@ -17,3 +17,5 @@ const computeDV = (T) => {
     }
     return S ? S - 1 : 'k';
 };
+
+module.exports = { validaRut };
