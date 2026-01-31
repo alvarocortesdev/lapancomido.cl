@@ -64,7 +64,7 @@ export const HeaderSearch = () => {
 
   return (
     <div
-      className={`relative bg-white p-2 border border-black w-full md:w-80 min-h-[44px] flex justify-center items-center ${
+      className={`relative bg-white p-2 w-full md:w-80 min-h-[44px] flex justify-center items-center ${
         showSuggestions ? "rounded-t-lg" : "rounded-lg"
       }`}
       ref={containerRef}
@@ -101,7 +101,7 @@ export const HeaderSearch = () => {
       {showSuggestions &&
         searchValue.trim() !== "" &&
         suggestions.length > 0 && (
-          <ul className="absolute z-10 left-0 right-0 top-full bg-white border border-black rounded-b-md max-h-60 overflow-y-auto">
+          <ul className="absolute z-10 left-0 right-0 top-full bg-white rounded-b-md max-h-60 overflow-y-auto">
             {suggestions.slice(0, 4).map((product) => (
               <li
                 key={product.id}

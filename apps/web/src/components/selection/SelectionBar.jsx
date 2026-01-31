@@ -39,7 +39,7 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-[#F5E1A4] rounded-xl shadow-[0_-8px_30px_rgba(0,0,0,0.2)] border border-[#262011]/30 z-50">
+    <div className="w-full max-w-6xl mx-auto bg-[#F5E1A4] rounded-xl z-50">
       {/* Expanded product list */}
       {expanded && (
         <div className="max-h-[40vh] overflow-y-auto p-3 sm:p-4 border-b border-[#262011]/20 bg-[#f8edc4] rounded-t-xl">
@@ -119,7 +119,7 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
           type="primary"
           size="middle"
           onClick={handleQuoteClick}
-          className="!bg-[#262011] !border-[#262011] hover:!bg-[#3d3018] text-sm sm:text-base"
+          className="!bg-[#262011] hover:!bg-[#3d3018] text-sm sm:text-base"
         >
           Cotizar
         </Button>

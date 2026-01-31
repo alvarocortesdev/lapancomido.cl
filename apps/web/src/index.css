@@ -60,6 +60,15 @@ body {
 
 .ant-btn {
   min-height: 44px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ant-btn:hover,
+.ant-btn:focus,
+.ant-btn:active {
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Ant Design Spin customization - black spinner */
