@@ -15,6 +15,7 @@ const productImagesRoutes = require('./productImages.routes');
 const uploadRoute = require('./uploadRoute');
 const categoriesRoutes = require('./categories.routes');
 const locationRoutes = require('./location.routes');
+const storeRoutes = require('./store.routes');
 
 router.use('/auth', authRoutes);
 router.use('/gateways', gatewaysRoutes);
@@ -28,6 +29,7 @@ router.use('/product-images', productImagesRoutes);
 router.use('/upload', uploadRoute);
 router.use('/categories', categoriesRoutes);
 router.use('/location', locationRoutes);
+router.use('/store', storeRoutes);
 
 // Ruta de test global opcional:
 router.get('/test', (req, res) => res.json({ message: 'Ruta de test global funcionando' }));
