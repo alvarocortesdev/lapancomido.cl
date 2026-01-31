@@ -6,6 +6,7 @@ import { useProducts } from "../hooks/useProducts";
 import { FaTimes } from "react-icons/fa";
 import { Dropdown, Button, Spin } from "antd";
 import { ProductCard } from "../components/catalog/ProductCard";
+import { ProductModal } from "../components/catalog/ProductModal";
 import { SelectionBar } from "../components/selection/SelectionBar";
 import { QuotationModal } from "../components/selection/QuotationModal";
 
@@ -21,9 +22,11 @@ export const CatalogPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
-  // Store config and quotation modal state
+  // Store config and modal states
   const [storeConfig, setStoreConfig] = useState({ show_prices: true });
   const [quotationModalOpen, setQuotationModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productModalOpen, setProductModalOpen] = useState(false);
 
   // Fetch store config on mount
   useEffect(() => {
@@ -70,6 +73,17 @@ export const CatalogPage = () => {
     }
     setOrderedProducts(sorted);
     setCurrentPage(1);
+  };
+
+  // Handle product click to open modal
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setProductModalOpen(true);
+  };
+
+  const handleProductModalClose = () => {
+    setProductModalOpen(false);
+    setSelectedProduct(null);
   };
 
   // Usamos la nueva API de Dropdown: definimos menuProps
@@ -162,6 +176,7 @@ export const CatalogPage = () => {
               key={product.id} 
               product={product} 
               showPrices={storeConfig.show_prices}
+              onProductClick={handleProductClick}
             />
           ))
         )}
@@ -189,6 +204,14 @@ export const CatalogPage = () => {
           showPrices={storeConfig.show_prices}
         />
       </div>
+
+      {/* Product Detail Modal */}
+      <ProductModal
+        product={selectedProduct}
+        open={productModalOpen}
+        onClose={handleProductModalClose}
+        showPrices={storeConfig.show_prices}
+      />
 
       {/* Quotation Modal */}
       <QuotationModal

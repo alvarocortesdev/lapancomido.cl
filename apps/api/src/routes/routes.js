@@ -16,6 +16,7 @@ const uploadRoute = require('./uploadRoute');
 const categoriesRoutes = require('./categories.routes');
 const locationRoutes = require('./location.routes');
 const storeRoutes = require('./store.routes');
+const contactRoutes = require('./contact.routes');
 
 router.use('/auth', authRoutes);
 router.use('/gateways', gatewaysRoutes);
@@ -30,6 +31,7 @@ router.use('/upload', uploadRoute);
 router.use('/categories', categoriesRoutes);
 router.use('/location', locationRoutes);
 router.use('/store', storeRoutes);
+router.use('/contact', contactRoutes);
 
 // Ruta de test global opcional:
 router.get('/test', (req, res) => res.json({ message: 'Ruta de test global funcionando' }));
