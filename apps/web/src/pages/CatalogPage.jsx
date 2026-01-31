@@ -139,9 +139,8 @@ export const CatalogPage = () => {
             style={{
               backgroundColor: "#fff2d2",
               color: "#000",
-              borderColor: "#ffcc00",
             }}
-            className="text-sm sm:text-base p-2 border border-black rounded-md flex items-center h-10 sm:h-12"
+            className="text-sm sm:text-base px-3 py-2 rounded-md flex items-center h-10 sm:h-12"
           >
             {orderedProducts.length} productos
           </div>
@@ -152,9 +151,8 @@ export const CatalogPage = () => {
             style={{
               backgroundColor: "#fff2d2",
               color: "#000",
-              borderColor: "#ffcc00",
             }}
-            className="text-sm sm:text-base p-2 border-black h-10 sm:h-12"
+            className="text-sm sm:text-base px-3 py-2 h-10 sm:h-12"
           >
             Ordenar
           </Button>

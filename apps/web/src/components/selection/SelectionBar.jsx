@@ -42,7 +42,7 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
     <div className="w-full max-w-6xl mx-auto bg-[#F5E1A4] rounded-xl z-50">
       {/* Expanded product list */}
       {expanded && (
-        <div className="max-h-[40vh] overflow-y-auto p-3 sm:p-4 border-b border-[#262011]/20 bg-[#f8edc4] rounded-t-xl">
+        <div className="max-h-[40vh] overflow-y-auto p-3 sm:p-4 border-b border-[#262011]/20 bg-[#fff5da] rounded-t-xl">
           <div className="flex justify-between items-center mb-2 sm:mb-3">
             <h3 className="font-semibold text-base sm:text-lg text-[#262011]">Productos seleccionados</h3>
             <Button
@@ -104,9 +104,9 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
             size="small"
             className="!px-1 sm:!px-2"
           />
-          <div className="text-sm sm:text-base text-[#262011]">
+          <div className="text-sm sm:text-base text-[#262011] bg-[#fff5da] px-3 py-1 rounded-lg">
             <span className="font-semibold">
-              {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
+              {totalItems} {totalItems === 1 ? 'Producto' : 'Productos'}
             </span>
             {showPrices && (
               <span className="ml-1 sm:ml-2 text-[#262011]/70">

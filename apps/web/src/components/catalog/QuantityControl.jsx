@@ -40,7 +40,7 @@ export const QuantityControl = ({
         size={size}
         icon={<MinusOutlined />}
         onClick={handleDecrease}
-        className="!bg-[#F5E1A4] hover:!bg-[#e6d294]"
+        className="!bg-[#F5E1A4] hover:!bg-[#e6d294] !w-9 !h-9 !min-w-[36px] !p-0 flex items-center justify-center"
       />
       <span className="min-w-[24px] text-center font-semibold">{quantity}</span>
       <Button
@@ -48,7 +48,7 @@ export const QuantityControl = ({
         size={size}
         icon={<PlusOutlined />}
         onClick={handleIncrease}
-        className="!bg-[#F5E1A4] hover:!bg-[#e6d294]"
+        className="!bg-[#F5E1A4] hover:!bg-[#e6d294] !w-9 !h-9 !min-w-[36px] !p-0 flex items-center justify-center"
       />
     </div>
   );

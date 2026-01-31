@@ -51,9 +51,9 @@ export const ProductCard = ({ product, showPrices = true, onProductClick }) => {
             style={{ backgroundImage: `url(${product.url_img})` }}
           />
         </div>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 px-1 sm:px-2 gap-1">
-          <p className="font-semibold text-sm sm:text-lg line-clamp-2">{product.product}</p>
-          <span className="text-gray-500 text-xs sm:text-sm font-medium">Agotado</span>
+        <div className="flex flex-col sm:flex-row justify-between items-start mt-2 px-1 sm:px-2 gap-1">
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">{product.product}</p>
+          <span className="text-gray-500 text-xs sm:text-sm font-medium flex-shrink-0 sm:leading-tight">Agotado</span>
         </div>
       </div>
     );
@@ -68,9 +68,9 @@ export const ProductCard = ({ product, showPrices = true, onProductClick }) => {
             style={{ backgroundImage: `url(${product.url_img})` }}
           />
         </div>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 px-1 sm:px-2 gap-1">
-          <p className="font-semibold text-sm sm:text-lg line-clamp-2">{product.product}</p>
-          {showPrices && <p className="text-black text-sm sm:text-base">{formatCLP(product.price)}</p>}
+        <div className="flex flex-col sm:flex-row justify-between items-start mt-2 px-1 sm:px-2 gap-1">
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">{product.product}</p>
+          {showPrices && <p className="text-black text-sm sm:text-base flex-shrink-0 sm:leading-tight">{formatCLP(product.price)}</p>}
         </div>
       </div>
       
