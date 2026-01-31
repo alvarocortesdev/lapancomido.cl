@@ -39,12 +39,12 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-gray-200 z-50">
+    <div className="w-full max-w-6xl mx-auto bg-[#F5E1A4] rounded-xl shadow-[0_-8px_30px_rgba(0,0,0,0.2)] border border-[#262011]/30 z-50">
       {/* Expanded product list */}
       {expanded && (
-        <div className="max-h-[40vh] overflow-y-auto p-4 border-b border-gray-200 bg-gray-50">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-semibold text-lg">Productos seleccionados</h3>
+        <div className="max-h-[40vh] overflow-y-auto p-3 sm:p-4 border-b border-[#262011]/20 bg-[#f8edc4] rounded-t-xl">
+          <div className="flex justify-between items-center mb-2 sm:mb-3">
+            <h3 className="font-semibold text-base sm:text-lg text-[#262011]">Productos seleccionados</h3>
             <Button
               type="text"
               danger
@@ -52,24 +52,24 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
               onClick={handleClearClick}
               size="small"
             >
-              Limpiar
+              <span className="hidden sm:inline">Limpiar</span>
             </Button>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {selection.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 bg-white p-2 rounded-lg"
+                className="flex items-center gap-2 sm:gap-3 bg-[#F5E1A4] p-2 rounded-lg border border-[#262011]/10"
               >
                 <img
                   src={item.url_img}
                   alt={item.product}
-                  className="w-12 h-12 object-cover rounded"
+                  className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{item.product}</p>
+                  <p className="font-medium truncate text-sm sm:text-base text-[#262011]">{item.product}</p>
                   {showPrices && (
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs sm:text-sm text-[#262011]/70">
                       {formatCLP(item.price)} c/u
                     </p>
                   )}
@@ -82,7 +82,7 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
                   size="small"
                 />
                 {showPrices && (
-                  <p className="font-semibold min-w-[70px] text-right">
+                  <p className="font-semibold text-sm sm:text-base min-w-[60px] sm:min-w-[70px] text-right text-[#262011]">
                     {formatCLP(item.quantity * Number(item.price))}
                   </p>
                 )}
@@ -94,21 +94,22 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
 
       {/* Main bar */}
       <div
-        className="flex justify-between items-center p-4 cursor-pointer"
+        className="flex justify-between items-center p-3 sm:p-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Button
             type="text"
             icon={expanded ? <DownOutlined /> : <UpOutlined />}
             size="small"
+            className="!px-1 sm:!px-2"
           />
-          <div>
+          <div className="text-sm sm:text-base text-[#262011]">
             <span className="font-semibold">
               {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
             </span>
             {showPrices && (
-              <span className="ml-2 text-gray-600">
+              <span className="ml-1 sm:ml-2 text-[#262011]/70">
                 {formatCLP(totalPrice)}
               </span>
             )}
@@ -116,9 +117,9 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
         </div>
         <Button
           type="primary"
-          size="large"
+          size="middle"
           onClick={handleQuoteClick}
-          className="!bg-green-600 !border-green-600 hover:!bg-green-700"
+          className="!bg-[#262011] !border-[#262011] hover:!bg-[#3d3018] text-sm sm:text-base"
         >
           Cotizar
         </Button>

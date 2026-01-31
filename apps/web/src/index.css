@@ -47,3 +47,12 @@ body {
   width: 24px;
   height: 18px;
 }
+
+/* Ant Design Spin customization - black spinner */
+.ant-spin .ant-spin-dot-item {
+  background-color: #262011 !important;
+}
+
+.ant-spin-text {
+  color: #262011 !important;
+}

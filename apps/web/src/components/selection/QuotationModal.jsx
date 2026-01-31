@@ -130,9 +130,11 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
       title="Cotización"
       open={open}
       onCancel={handleCancel}
-      width={600}
+      width="95%"
+      style={{ maxWidth: 600 }}
+      centered
       footer={[
-        <Button key="cancel" onClick={handleCancel}>
+        <Button key="cancel" onClick={handleCancel} className="hidden sm:inline-block">
           Cancelar
         </Button>,
         <Button
@@ -140,7 +142,7 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
           type="primary"
           loading={submitting}
           onClick={handleSubmit}
-          className="!bg-green-600 !border-green-600 hover:!bg-green-700"
+          className="!bg-green-600 !border-green-600 hover:!bg-green-700 w-full sm:w-auto"
           disabled={selection.length === 0}
         >
           Consultar por stock
@@ -148,21 +150,21 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
       ]}
     >
       {/* Product Summary */}
-      <div className="mb-6">
-        <h4 className="font-semibold mb-3">Productos seleccionados</h4>
-        <div className="max-h-[200px] overflow-y-auto space-y-2 bg-gray-50 p-3 rounded-lg">
+      <div className="mb-4 sm:mb-6">
+        <h4 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Productos seleccionados</h4>
+        <div className="max-h-[150px] sm:max-h-[200px] overflow-y-auto space-y-2 bg-gray-50 p-2 sm:p-3 rounded-lg">
           {selection.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 bg-white p-2 rounded"
+              className="flex items-center gap-2 sm:gap-3 bg-white p-2 rounded"
             >
               <img
                 src={item.url_img}
                 alt={item.product}
-                className="w-10 h-10 object-cover rounded"
+                className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
-                <p className="font-medium truncate text-sm">{item.product}</p>
+                <p className="font-medium truncate text-xs sm:text-sm">{item.product}</p>
               </div>
               <QuantityControl
                 quantity={item.quantity}
@@ -172,7 +174,7 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
                 size="small"
               />
               {storeConfig.show_prices && (
-                <p className="font-semibold text-sm min-w-[60px] text-right">
+                <p className="font-semibold text-xs sm:text-sm min-w-[50px] sm:min-w-[60px] text-right">
                   {formatCLP(item.quantity * Number(item.price))}
                 </p>
               )}
@@ -182,6 +184,7 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
                 danger
                 icon={<DeleteOutlined />}
                 onClick={() => removeFromSelection(item.id)}
+                className="flex-shrink-0"
               />
             </div>
           ))}

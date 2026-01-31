@@ -16,7 +16,7 @@ Reconstrucción del sitio web de panadería artesanal desde e-commerce tradicion
 - Phase 6 and Phase 7 can run in parallel (historial es independiente de SEO)
 
 - [x] **Phase 1: Fundación & Migración DB** - Turborepo + Prisma ORM + CI/CD pipeline ✓
-- [ ] **Phase 2: Sistema de Cotización** - Catálogo público + selección + cotización WhatsApp
+- [x] **Phase 2: Sistema de Cotización** - Catálogo público + selección + cotización WhatsApp ✓
 - [ ] **Phase 3: Arquitectura Split** - Separación en subdominios (web/admin/api)
 - [ ] **Phase 4: Autenticación OTP** - Login admin con OTP por dispositivo nuevo
 - [ ] **Phase 5: Panel Admin** - CRUD productos, categorías y contenido
@@ -48,20 +48,20 @@ Plans:
 **Depends on**: Phase 1
 **Requirements**: CAT-01, CAT-02, CAT-03, CAT-04, CAT-05, SEL-01, SEL-02, SEL-03, SEL-04, SEL-05, COT-01, COT-02, COT-03, COT-04, COT-05, COT-06, COT-07
 **Success Criteria** (what must be TRUE):
-  1. Usuario ve catálogo con productos, imágenes, precios (si habilitados) y disponibilidad
-  2. Usuario puede filtrar productos por categorías/etiquetas
-  3. Usuario puede seleccionar/deseleccionar productos y ajustar cantidades
-  4. Barra de selección muestra items seleccionados y persiste en localStorage
-  5. Modal de cotización muestra resumen editable con campos nombre/celular
-  6. Botón genera link wa.me que abre WhatsApp con mensaje estructurado
+  1. Usuario ve catálogo con productos, imágenes, precios (si habilitados) y disponibilidad ✓
+  2. Usuario puede filtrar productos por categorías/etiquetas ✓
+  3. Usuario puede seleccionar/deseleccionar productos y ajustar cantidades ✓
+  4. Barra de selección muestra items seleccionados y persiste en sessionStorage ✓
+  5. Modal de cotización muestra resumen editable con campos nombre/celular ✓
+  6. Botón genera link wa.me que abre WhatsApp con mensaje estructurado ✓
 
 **Plans**: 4 plans in 3 waves
 
 Plans:
-- [ ] 02-01-PLAN.md — Database schema + Store config API (Wave 1)
-- [ ] 02-02-PLAN.md — Selection state + WhatsApp helper (Wave 1)
-- [ ] 02-03-PLAN.md — Catalog UI with selection controls (Wave 2)
-- [ ] 02-04-PLAN.md — Quotation modal + integration (Wave 3)
+- [x] 02-01-PLAN.md — Database schema + Store config API (Wave 1) ✓
+- [x] 02-02-PLAN.md — Selection state + WhatsApp helper (Wave 1) ✓
+- [x] 02-03-PLAN.md — Catalog UI with selection controls (Wave 2) ✓
+- [x] 02-04-PLAN.md — Quotation modal + integration (Wave 3) ✓
 
 ### Phase 3: Arquitectura Split
 **Goal**: Apps separadas desplegadas en subdominios propios
@@ -159,7 +159,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundación & Migración DB | 3/3 | Complete ✓ | 2026-01-30 |
-| 2. Sistema de Cotización | 0/4 | Not started | - |
+| 2. Sistema de Cotización | 4/4 | Complete ✓ | 2026-01-31 |
 | 3. Arquitectura Split | 0/2 | Not started | - |
 | 4. Autenticación OTP | 0/3 | Not started | - |
 | 5. Panel Admin | 0/3 | Not started | - |
@@ -167,7 +167,9 @@ Plans:
 | 7. SEO & Performance | 0/2 | Not started | - |
 
 **Total Plans:** 19
+**Completed:** 7/19 (37%)
 **Total Requirements:** 60
 
 ---
 *Roadmap created: 2026-01-30*
+*Last updated: 2026-01-31*

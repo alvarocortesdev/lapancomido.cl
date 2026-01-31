@@ -1,56 +1,65 @@
 // src/controllers/product.controller.js
 
-const db = require('../config/db');
-const schema = process.env.DB_SCHEMA;
-const Product = require('../models/Product');
+const { prisma } = require('@lapancomido/database');
 
 // Endpoint para listar productos públicos con filtros
 const getProducts = async (req, res, next) => {
     try {
-        let query;
-        let params = [];
-
-        // Si se filtra por categoría se deben incluir joins a las tablas de categorías
-        if (req.query.category) {
-            query = `
-        SELECT DISTINCT p.*, pi.url_img
-        FROM ${schema}.products p
-        LEFT JOIN (
-          SELECT DISTINCT ON (id_product) id_product, url_img
-          FROM ${schema}.product_img
-          ORDER BY id_product, id
-        ) pi ON p.id = pi.id_product
-        JOIN ${schema}.categories_products cp ON p.id = cp.id_product
-        JOIN ${schema}.categories c ON cp.id_category = c.id
-        WHERE p.available = true
-      `;
-            params.push(req.query.category);
-            query += ` AND c.category = $${params.length}`;
-            if (req.query.search) {
-                params.push(`%${req.query.search}%`);
-                query += ` AND (p.product ILIKE $${params.length} OR p.description ILIKE $${params.length})`;
-            }
-        } else {
-            // Consulta básica sin filtro de categoría
-            query = `
-        SELECT p.*, pi.url_img
-        FROM ${schema}.products p
-        LEFT JOIN (
-          SELECT DISTINCT ON (id_product) id_product, url_img
-          FROM ${schema}.product_img
-          ORDER BY id_product, id
-        ) pi ON p.id = pi.id_product
-        WHERE p.available = true
-      `;
-            if (req.query.search) {
-                params.push(`%${req.query.search}%`);
-                query += ` AND (p.product ILIKE $${params.length} OR p.description ILIKE $${params.length})`;
-            }
+        const { category, search } = req.query;
+        
+        // Build where clause
+        const where = {
+            available: true,
+        };
+        
+        // Add search filter
+        if (search) {
+            where.OR = [
+                { product: { contains: search, mode: 'insensitive' } },
+                { description: { contains: search, mode: 'insensitive' } },
+            ];
         }
-        query += ' ORDER BY p.id';
-
-        const { rows } = await db.query(query, params);
-        res.json(rows);
+        
+        // Add category filter
+        if (category) {
+            where.categories_products = {
+                some: {
+                    category: {
+                        category: category,
+                    },
+                },
+            };
+        }
+        
+        const products = await prisma.products.findMany({
+            where,
+            include: {
+                images: {
+                    take: 1,
+                    orderBy: { id: 'asc' },
+                },
+            },
+            orderBy: { id: 'asc' },
+        });
+        
+        // Transform to match expected format
+        const result = products.map((p) => ({
+            id: p.id,
+            product: p.product,
+            ingredients: p.ingredients,
+            price: p.price,
+            weight: p.weight,
+            description: p.description,
+            nutrition: p.nutrition,
+            available: p.available,
+            unit_type: p.unit_type,
+            pack_size: p.pack_size,
+            created_at: p.created_at,
+            updated_at: p.updated_at,
+            url_img: p.images[0]?.url_img || null,
+        }));
+        
+        res.json(result);
     } catch (err) {
         next(err);
     }
@@ -60,74 +69,109 @@ const getProducts = async (req, res, next) => {
 const getProductDetail = async (req, res, next) => {
     try {
         const { id } = req.params;
-        // Obtener la información básica del producto y el stock actual
-        const productQuery = `
-          SELECT p.*, 
-                 (SELECT stock FROM ${schema}.stock WHERE id_product = p.id) AS stock
-          FROM ${schema}.products p
-          WHERE p.id = $1
-        `;
-        const productResult = await db.query(productQuery, [id]);
-        const product = productResult.rows[0];
+        const productId = parseInt(id, 10);
+        
+        if (isNaN(productId)) {
+            return res.status(400).json({ error: 'ID de producto inválido.' });
+        }
+        
+        // Get product with all relations
+        const product = await prisma.products.findUnique({
+            where: { id: productId },
+            include: {
+                stock: true,
+                images: {
+                    orderBy: { id: 'asc' },
+                },
+                categories_products: {
+                    include: {
+                        category: true,
+                    },
+                },
+            },
+        });
+        
         if (!product) {
             return res.status(404).json({ error: 'Producto no encontrado.' });
         }
-
-        // Obtener todas las imágenes del producto
-        const imagesQuery = `
-          SELECT url_img FROM ${schema}.product_img
-          WHERE id_product = $1
-          ORDER BY id
-        `;
-        const imagesResult = await db.query(imagesQuery, [id]);
-        product.images = imagesResult.rows.map(row => row.url_img);
-
-        // Obtener las categorías a las que pertenece el producto
-        const categoriesQuery = `
-          SELECT c.category
-          FROM ${schema}.categories c
-          JOIN ${schema}.categories_products cp ON c.id = cp.id_category
-          WHERE cp.id_product = $1
-        `;
-        const categoriesResult = await db.query(categoriesQuery, [id]);
-        product.categories = categoriesResult.rows.map(row => row.category);
-
-        // Se conserva el valor real de nutrition proveniente de la BD
-        // (Eliminar la línea que asignaba null)
-
-        // Obtener productos relacionados basados en la primera categoría (si existe)
-        if (product.categories.length > 0) {
-            const relatedQuery = `
-              SELECT DISTINCT p.id, p.product, pi.url_img
-              FROM ${schema}.products p
-              LEFT JOIN (
-                SELECT DISTINCT ON (id_product) id_product, url_img
-                FROM ${schema}.product_img
-                ORDER BY id_product, id
-              ) pi ON p.id = pi.id_product
-              JOIN ${schema}.categories_products cp ON p.id = cp.id_product
-              JOIN ${schema}.categories c ON cp.id_category = c.id
-              WHERE c.category = $1
-                AND p.id <> $2
-                AND p.available = true
-              LIMIT 5
-            `;
-            const relatedResult = await db.query(relatedQuery, [product.categories[0], id]);
-            product.related = relatedResult.rows;
-        } else {
-            product.related = [];
+        
+        // Get related products (same first category)
+        const categories = product.categories_products.map((cp) => cp.category.category);
+        let related = [];
+        
+        if (categories.length > 0) {
+            const relatedProducts = await prisma.products.findMany({
+                where: {
+                    available: true,
+                    id: { not: productId },
+                    categories_products: {
+                        some: {
+                            category: {
+                                category: categories[0],
+                            },
+                        },
+                    },
+                },
+                include: {
+                    images: {
+                        take: 1,
+                        orderBy: { id: 'asc' },
+                    },
+                },
+                take: 5,
+            });
+            
+            related = relatedProducts.map((p) => ({
+                id: p.id,
+                product: p.product,
+                url_img: p.images[0]?.url_img || null,
+            }));
         }
-
-        res.json(product);
+        
+        // Build response
+        const result = {
+            id: product.id,
+            product: product.product,
+            ingredients: product.ingredients,
+            price: product.price,
+            weight: product.weight,
+            description: product.description,
+            nutrition: product.nutrition,
+            available: product.available,
+            unit_type: product.unit_type,
+            pack_size: product.pack_size,
+            created_at: product.created_at,
+            updated_at: product.updated_at,
+            stock: product.stock[0]?.stock || 0,
+            images: product.images.map((img) => img.url_img),
+            categories,
+            related,
+        };
+        
+        res.json(result);
     } catch (err) {
         next(err);
     }
 };
 
-
 const createProduct = async (req, res, next) => {
     try {
-        const newProduct = await Product.createProduct(req.body);
+        const { product, ingredients, price, weight, description, nutrition, available, unit_type, pack_size } = req.body;
+        
+        const newProduct = await prisma.products.create({
+            data: {
+                product,
+                ingredients,
+                price,
+                weight,
+                description,
+                nutrition,
+                available: available ?? false,
+                unit_type: unit_type ?? 'unit',
+                pack_size,
+            },
+        });
+        
         res.status(201).json(newProduct);
     } catch (err) {
         next(err);
@@ -136,24 +180,57 @@ const createProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
     try {
-        const updatedProduct = await Product.updateProduct(req.params.id, req.body);
-        if (!updatedProduct) {
-            return res.status(404).json({ error: 'Producto no encontrado.' });
+        const { id } = req.params;
+        const productId = parseInt(id, 10);
+        
+        if (isNaN(productId)) {
+            return res.status(400).json({ error: 'ID de producto inválido.' });
         }
+        
+        const { product, ingredients, price, weight, description, nutrition, available, unit_type, pack_size } = req.body;
+        
+        const updatedProduct = await prisma.products.update({
+            where: { id: productId },
+            data: {
+                product,
+                ingredients,
+                price,
+                weight,
+                description,
+                nutrition,
+                available,
+                unit_type,
+                pack_size,
+            },
+        });
+        
         res.json(updatedProduct);
     } catch (err) {
+        if (err.code === 'P2025') {
+            return res.status(404).json({ error: 'Producto no encontrado.' });
+        }
         next(err);
     }
 };
 
 const deleteProduct = async (req, res, next) => {
     try {
-        const deletedProduct = await Product.deleteProduct(req.params.id);
-        if (!deletedProduct) {
-            return res.status(404).json({ error: 'Producto no encontrado.' });
+        const { id } = req.params;
+        const productId = parseInt(id, 10);
+        
+        if (isNaN(productId)) {
+            return res.status(400).json({ error: 'ID de producto inválido.' });
         }
+        
+        const deletedProduct = await prisma.products.delete({
+            where: { id: productId },
+        });
+        
         res.json(deletedProduct);
     } catch (err) {
+        if (err.code === 'P2025') {
+            return res.status(404).json({ error: 'Producto no encontrado.' });
+        }
         next(err);
     }
 };

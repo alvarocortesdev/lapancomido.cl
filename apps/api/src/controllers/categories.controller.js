@@ -1,12 +1,16 @@
 // src/controllers/categories.controller.js
-const db = require('../config/db');
-const schema = process.env.DB_SCHEMA;
+const { prisma } = require('@lapancomido/database');
 
 const getCategories = async (req, res, next) => {
     try {
-        const query = `SELECT id, category FROM ${schema}.categories ORDER BY category`;
-        const { rows } = await db.query(query);
-        res.json(rows);
+        const categories = await prisma.categories.findMany({
+            orderBy: { category: 'asc' },
+            select: {
+                id: true,
+                category: true,
+            },
+        });
+        res.json(categories);
     } catch (err) {
         next(err);
     }

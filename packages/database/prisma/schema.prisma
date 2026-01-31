@@ -33,9 +33,48 @@ model products {
   updated_at  DateTime  @default(now()) @updatedAt
 
   // Relations
-  stock     stock[]
-  favorites favorites[]
+  stock              stock[]
+  favorites          favorites[]
+  images             product_img[]
+  categories_products categories_products[]
 
+  @@schema("pancomido")
+}
+
+model product_img {
+  id         Int      @id @default(autoincrement())
+  id_product Int
+  url_img    String
+  created_at DateTime @default(now())
+
+  // Relations
+  product products @relation(fields: [id_product], references: [id], onDelete: Cascade)
+
+  @@schema("pancomido")
+}
+
+model categories {
+  id         Int      @id @default(autoincrement())
+  category   String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  // Relations
+  categories_products categories_products[]
+
+  @@schema("pancomido")
+}
+
+model categories_products {
+  id          Int @id @default(autoincrement())
+  id_category Int
+  id_product  Int
+
+  // Relations
+  category categories @relation(fields: [id_category], references: [id], onDelete: Cascade)
+  product  products   @relation(fields: [id_product], references: [id], onDelete: Cascade)
+
+  @@unique([id_category, id_product])
   @@schema("pancomido")
 }
 

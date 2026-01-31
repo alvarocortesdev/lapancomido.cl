@@ -116,22 +116,20 @@ export const CatalogPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-4 pb-24">
-      <h2 className="text-3xl font-semibold">Catálogo de Productos</h2>
+    <div className="container mx-auto px-3 sm:px-4 py-4">
+      <h2 className="text-2xl sm:text-3xl font-semibold">Catálogo de Productos</h2>
       <Categories />
-      <div className="flex justify-between items-center my-4">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 my-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <div
             style={{
               backgroundColor: "#fff2d2",
               color: "#000",
               borderColor: "#ffcc00",
-              fontSize: "16px",
-              height: "3rem",
             }}
-            className="bg-gray-300 p-2 border border-black rounded-md flex items-center"
+            className="text-sm sm:text-base p-2 border border-black rounded-md flex items-center h-10 sm:h-12"
           >
-            Resultados: {orderedProducts.length} productos
+            {orderedProducts.length} productos
           </div>
           {activeFilterTag}
         </div>
@@ -141,20 +139,21 @@ export const CatalogPage = () => {
               backgroundColor: "#fff2d2",
               color: "#000",
               borderColor: "#ffcc00",
-              fontSize: "16px",
-              height: "3rem",
             }}
-            className="bg-gray-300 p-2 border-black"
+            className="text-sm sm:text-base p-2 border-black h-10 sm:h-12"
           >
             Ordenar
           </Button>
         </Dropdown>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
         {loading ? (
-          <div className="col-span-full flex justify-center items-center">
-            <Spin tip="Cargando productos de la tienda...">
-              <div style={{ width: "350px", height: "150px" }} />
+          <div className="col-span-full flex justify-center items-center py-12">
+            <Spin 
+              size="large"
+              tip={<span className="text-[#262011] text-lg mt-4">Cargando productos...</span>}
+            >
+              <div style={{ width: "400px", height: "200px" }} />
             </Spin>
           </div>
         ) : (
@@ -183,11 +182,13 @@ export const CatalogPage = () => {
         ))}
       </div>
 
-      {/* Selection Bar */}
-      <SelectionBar 
-        onQuoteClick={() => setQuotationModalOpen(true)}
-        showPrices={storeConfig.show_prices}
-      />
+      {/* Selection Bar - sticky container */}
+      <div className="sticky bottom-0 mt-8 -mx-3 sm:-mx-4 px-3 sm:px-4 pb-4">
+        <SelectionBar 
+          onQuoteClick={() => setQuotationModalOpen(true)}
+          showPrices={storeConfig.show_prices}
+        />
+      </div>
 
       {/* Quotation Modal */}
       <QuotationModal

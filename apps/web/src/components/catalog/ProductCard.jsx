@@ -50,32 +50,32 @@ export const ProductCard = ({ product, showPrices = true }) => {
   // Out of stock product rendering
   if (isOutOfStock) {
     return (
-      <div className="p-4 opacity-50 grayscale cursor-not-allowed">
-        <div className="relative bg-white w-full h-68 flex items-center justify-center border-10 border-white rounded-2xl">
+      <div className="p-2 sm:p-4 opacity-50 grayscale cursor-not-allowed">
+        <div className="relative bg-white w-full aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl overflow-hidden">
           <div
-            className="w-full h-full rounded-2xl bg-center bg-no-repeat bg-cover"
+            className="w-full h-full bg-center bg-no-repeat bg-cover"
             style={{ backgroundImage: `url(${product.url_img})` }}
           />
         </div>
-        <div className="flex justify-between items-center mt-2 px-2">
-          <p className="font-semibold text-lg">{product.product}</p>
-          <span className="text-gray-500 text-sm font-medium">Agotado</span>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 px-1 sm:px-2 gap-1">
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2">{product.product}</p>
+          <span className="text-gray-500 text-xs sm:text-sm font-medium">Agotado</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 hover:bg-gray-100 transition duration-200 rounded-2xl">
+    <div className="p-2 sm:p-4 hover:bg-gray-100 transition duration-200 rounded-xl sm:rounded-2xl">
       <Link to={`/product/${product.id}`}>
-        <div className="relative bg-white w-full h-68 flex items-center justify-center border-10 border-white rounded-2xl">
+        <div className="relative bg-white w-full aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl overflow-hidden">
           {/* Favorites icon */}
           {session?.token && (
             <div
-              className="absolute top-4 right-4 z-10 cursor-pointer active:scale-90 transition-transform"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 cursor-pointer active:scale-90 transition-transform"
               onClick={handleFavoriteClick}
               style={{
-                transform: "scale(1.3)",
+                transform: "scale(1.1)",
                 filter: "drop-shadow(0 0 2px rgba(0,0,0,0.4))",
               }}
             >
@@ -83,18 +83,18 @@ export const ProductCard = ({ product, showPrices = true }) => {
             </div>
           )}
           <div
-            className="w-full h-full rounded-2xl bg-center bg-no-repeat bg-cover"
+            className="w-full h-full bg-center bg-no-repeat bg-cover"
             style={{ backgroundImage: `url(${product.url_img})` }}
           />
         </div>
-        <div className="flex justify-between items-center mt-2 px-2">
-          <p className="font-semibold text-lg">{product.product}</p>
-          {showPrices && <p className="text-black ml-4">{formatCLP(product.price)}</p>}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-2 px-1 sm:px-2 gap-1">
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2">{product.product}</p>
+          {showPrices && <p className="text-black text-sm sm:text-base">{formatCLP(product.price)}</p>}
         </div>
       </Link>
       
       {/* Selection controls */}
-      <div className="mt-3 flex justify-center" onClick={(e) => e.stopPropagation()}>
+      <div className="mt-2 sm:mt-3 flex justify-center" onClick={(e) => e.stopPropagation()}>
         {isSelected ? (
           <QuantityControl
             quantity={selectedItem.quantity}
