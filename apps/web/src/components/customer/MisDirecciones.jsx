@@ -298,7 +298,7 @@ export const MisDirecciones = () => {
           {addresses.map((addr) => (
             <li
               key={addr.id}
-              className="border p-5 rounded-md flex justify-between items-center"
+              className="border p-5 rounded-[30px] flex justify-between items-center"
             >
               <Checkbox
                 onChange={(e) => handleSelectAddress(addr.id, e.target.checked)}

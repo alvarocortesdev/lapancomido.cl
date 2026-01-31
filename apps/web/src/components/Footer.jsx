@@ -8,7 +8,7 @@ import { SlLocationPin } from "react-icons/sl";
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#F5E1A4] text-[#262011] p-4 sm:p-6 md:mt-8">
+    <footer className="bg-[#f5e1a4] text-[#262011] p-4 sm:p-6 md:mt-8">
       <div className="w-full max-w-[80rem] mx-auto">
         {/* Mobile Layout */}
         <div className="md:hidden">
@@ -84,7 +84,9 @@ export const Footer = () => {
             {/* Texto y contactos */}
             <div>
               <p className="font-bold text-lg">Pan Comido</p>
-              <p className="text-base mb-3">Panadería artesanal en Caldera, Atacama</p>
+              <p className="text-base mb-3">
+                Panadería artesanal en Caldera, Atacama
+              </p>
 
               {/* Datos de contacto en lista */}
               <div className="space-y-1 text-sm">

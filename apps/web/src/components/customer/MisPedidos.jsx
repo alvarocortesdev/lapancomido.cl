@@ -111,7 +111,7 @@ export const MisPedidos = () => {
     return (
       <div
         onClick={() => showOrderDetails(order)}
-        className="p-4 border border-transparent rounded-lg shadow-md transform hover:scale-101 transition-transform cursor-pointer"
+        className="p-4 border border-transparent rounded-[30px] shadow-md transform hover:scale-101 transition-transform cursor-pointer"
       >
         <h3 className="text-lg font-bold">Pedido #{order.id}</h3>
         <div className="flex justify-between mt-2">

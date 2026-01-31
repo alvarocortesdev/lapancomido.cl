@@ -11,8 +11,13 @@ import { formatCLP } from "../../helpers/formatPrice.helper";
  * @param {Function} onProductClick - Callback when product is clicked (opens modal)
  */
 export const ProductCard = ({ product, showPrices = true, onProductClick }) => {
-  const { addToSelection, updateQuantity, removeFromSelection, getSelectedItem } = useSelection();
-  
+  const {
+    addToSelection,
+    updateQuantity,
+    removeFromSelection,
+    getSelectedItem,
+  } = useSelection();
+
   const selectedItem = getSelectedItem(product.id);
   const isSelected = !!selectedItem;
   const isOutOfStock = !product.available;
@@ -52,15 +57,19 @@ export const ProductCard = ({ product, showPrices = true, onProductClick }) => {
           />
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-start mt-2 px-1 sm:px-2 gap-1">
-          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">{product.product}</p>
-          <span className="text-gray-500 text-xs sm:text-sm font-medium flex-shrink-0 sm:leading-tight">Agotado</span>
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">
+            {product.product}
+          </p>
+          <span className="text-gray-500 text-xs sm:text-sm font-medium flex-shrink-0 sm:leading-tight">
+            Agotado
+          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-2 sm:p-4 hover:bg-gray-100 transition duration-200 rounded-xl sm:rounded-2xl">
+    <div className="p-2 sm:p-4 hover:bg-gray-100 transition duration-200 rounded-2xl sm:rounded-[28px]">
       <div onClick={handleCardClick} className="cursor-pointer">
         <div className="relative bg-white w-full aspect-square flex items-center justify-center rounded-xl sm:rounded-2xl overflow-hidden">
           <div
@@ -69,13 +78,22 @@ export const ProductCard = ({ product, showPrices = true, onProductClick }) => {
           />
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-start mt-2 px-1 sm:px-2 gap-1">
-          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">{product.product}</p>
-          {showPrices && <p className="text-black text-sm sm:text-base flex-shrink-0 sm:leading-tight">{formatCLP(product.price)}</p>}
+          <p className="font-semibold text-sm sm:text-lg line-clamp-2 h-[2.5em] sm:h-[2.75em] leading-tight">
+            {product.product}
+          </p>
+          {showPrices && (
+            <p className="text-black text-sm sm:text-base flex-shrink-0 sm:leading-tight">
+              {formatCLP(product.price)}
+            </p>
+          )}
         </div>
       </div>
-      
+
       {/* Selection controls */}
-      <div className="mt-2 sm:mt-3 flex justify-center" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="mt-2 sm:mt-3 flex justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         {isSelected ? (
           <QuantityControl
             quantity={selectedItem.quantity}

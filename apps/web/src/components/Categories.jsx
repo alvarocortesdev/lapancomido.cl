@@ -47,12 +47,12 @@ export const Categories = () => {
 
   return (
     <section className="my-4 sm:my-8 w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 pt-2 sm:pt-4 pb-2 sm:pb-4 rounded-lg w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 pt-2 sm:pt-4 pb-2 sm:pb-4 rounded-[30px] w-full">
         {categories.map((category) => (
           <div
             key={category}
             onClick={() => handleCategoryClick(category)}
-            className="cursor-pointer p-3 sm:p-4 bg-[#F5E1A4] rounded-lg flex justify-center items-center text-center font-semibold text-sm sm:text-base hover:bg-[#e6d294] transition-colors"
+            className="cursor-pointer p-3 sm:p-4 bg-[#F5E1A4] rounded-full flex justify-center items-center text-center font-semibold text-sm sm:text-base hover:bg-[#e6d294] transition-colors"
           >
             {capitalizeWords(category)}
           </div>

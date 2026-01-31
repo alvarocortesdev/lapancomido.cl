@@ -21,56 +21,56 @@ export const Header = () => {
 
   return (
     <>
-      <header className="bg-[#F5E1A4] text-[#262011] p-3 md:p-4 fixed top-0 left-0 right-0 z-50 md:relative md:top-auto md:left-auto md:right-auto">
-        <div className="flex items-center justify-between gap-4 max-w-[80rem] mx-auto px-0 sm:px-40">
+      <header className="bg-[#f5e1a4] text-[#262011] p-3 md:p-4 fixed top-0 left-0 right-0 z-50 md:relative md:top-auto md:left-auto md:right-auto">
+        <div className="flex items-center gap-4 md:gap-6 md:justify-between container mx-auto px-3 sm:px-40">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/">
-              <img src={logo} alt="Pan Comido" className="h-14 sm:h-16 md:h-24" />
+              <img
+                src={logo}
+                alt="Pan Comido"
+                className="h-14 sm:h-16 md:h-24"
+              />
             </Link>
           </div>
 
           {/* Mobile: Texto central */}
           <div className="md:hidden flex-1 text-center">
-            <p className="text-base font-semibold">
-              Panadería de Masa Madre
-            </p>
+            <p className="text-base font-semibold">Panadería de Masa Madre</p>
           </div>
 
           {/* Desktop: Search and Navigation */}
-          <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
-            {/* Search */}
-            <div className="flex-1 max-w-md">
+          <div className="hidden md:flex flex-1 justify-center">
+            <div className="w-full max-w-md">
               <HeaderSearch />
             </div>
-
-            {/* Navigation */}
-            <nav className="flex items-center gap-6 text-[#262011] text-xl font-semibold">
-              <Link
-                to="/"
-                className="transition hover:underline underline-offset-4"
-              >
-                Inicio
-              </Link>
-              <Link
-                to="/catalog"
-                className="transition hover:underline underline-offset-4"
-              >
-                Catálogo
-              </Link>
-              <button
-                onClick={openContactModal}
-                className="transition hover:underline underline-offset-4"
-              >
-                Contacto
-              </button>
-            </nav>
           </div>
+
+          <nav className="hidden md:flex items-center gap-6 text-[#262011] text-xl font-semibold">
+            <Link
+              to="/"
+              className="transition hover:underline underline-offset-4"
+            >
+              Inicio
+            </Link>
+            <Link
+              to="/catalog"
+              className="transition hover:underline underline-offset-4"
+            >
+              Catálogo
+            </Link>
+            <button
+              onClick={openContactModal}
+              className="transition hover:underline underline-offset-4"
+            >
+              Contacto
+            </button>
+          </nav>
 
           {/* Mobile: Hamburger button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden flex flex-col justify-center items-center w-11 h-11 gap-1.5 rounded-lg hover:bg-[#262011]/10 transition-colors"
+            className="md:hidden flex flex-col justify-center items-center w-11 h-11 gap-1.5 rounded-full hover:bg-[#262011]/10 transition-colors"
             aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={isMenuOpen}
           >
@@ -103,7 +103,7 @@ export const Header = () => {
 
         {/* Mobile Menu Drawer */}
         <div
-          className={`fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-[#F5E1A4] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+          className={`fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-[#fff5da] z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >

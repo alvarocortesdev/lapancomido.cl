@@ -21,7 +21,7 @@ body {
   flex: 1;
   padding: 8px 12px;
   border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  border-radius: 100px;
   font-size: 16px; /* Prevents iOS zoom */
   line-height: 1.5;
   min-height: 44px; /* Touch target */

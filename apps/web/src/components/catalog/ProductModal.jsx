@@ -26,7 +26,7 @@ export const ProductModal = ({ product, open, onClose, showPrices = true }) => {
     >
       <div className="flex flex-col">
         {/* Product Image */}
-        <div className="w-full aspect-square rounded-lg overflow-hidden mb-4">
+        <div className="w-full aspect-square rounded-[30px] overflow-hidden mb-4">
           {product.url_img ? (
             <img
               src={product.url_img}

@@ -12,13 +12,13 @@ import { QuantityControl } from "../catalog/QuantityControl";
  * @param {boolean} showPrices - Whether to display prices (from store config)
  */
 export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
-  const { 
-    selection, 
-    totalItems, 
-    totalPrice, 
+  const {
+    selection,
+    totalItems,
+    totalPrice,
     clearSelection,
     updateQuantity,
-    removeFromSelection 
+    removeFromSelection,
   } = useSelection();
   const [expanded, setExpanded] = useState(false);
 
@@ -44,7 +44,9 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
       {expanded && (
         <div className="max-h-[40vh] overflow-y-auto p-3 sm:p-4 border-b border-[#262011]/20 bg-[#fff5da] rounded-t-xl">
           <div className="flex justify-between items-center mb-2 sm:mb-3">
-            <h3 className="font-semibold text-base sm:text-lg text-[#262011]">Productos seleccionados</h3>
+            <h3 className="font-semibold text-base sm:text-lg text-[#262011]">
+              Productos seleccionados
+            </h3>
             <Button
               type="text"
               danger
@@ -59,15 +61,17 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
             {selection.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-2 sm:gap-3 bg-[#F5E1A4] p-2 rounded-lg border border-[#262011]/10"
+                className="flex items-center gap-2 sm:gap-3 bg-[#F5E1A4] p-2 rounded-full border border-[#262011]/10"
               >
                 <img
                   src={item.url_img}
                   alt={item.product}
-                  className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded flex-shrink-0"
+                  className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-full flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate text-sm sm:text-base text-[#262011]">{item.product}</p>
+                  <p className="font-medium truncate text-sm sm:text-base text-[#262011]">
+                    {item.product}
+                  </p>
                   {showPrices && (
                     <p className="text-xs sm:text-sm text-[#262011]/70">
                       {formatCLP(item.price)} c/u
@@ -82,7 +86,7 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
                   size="small"
                 />
                 {showPrices && (
-                  <p className="font-semibold text-sm sm:text-base min-w-[60px] sm:min-w-[70px] text-right text-[#262011]">
+                  <p className="font-semibold text-sm sm:text-base min-w-[60px] sm:min-w-[70px] mr-3 text-right text-[#262011]">
                     {formatCLP(item.quantity * Number(item.price))}
                   </p>
                 )}
@@ -104,9 +108,9 @@ export const SelectionBar = ({ onQuoteClick, showPrices = true }) => {
             size="small"
             className="!px-1 sm:!px-2"
           />
-          <div className="text-sm sm:text-base text-[#262011] bg-[#fff5da] px-3 py-1 rounded-lg">
+          <div className="text-sm sm:text-base text-[#262011] bg-[#fff5da] pl-3 pr-5 sm:pr-6 py-1 rounded-lg">
             <span className="font-semibold">
-              {totalItems} {totalItems === 1 ? 'Producto' : 'Productos'}
+              {totalItems} {totalItems === 1 ? "Producto" : "Productos"}
             </span>
             {showPrices && (
               <span className="ml-1 sm:ml-2 text-[#262011]/70">

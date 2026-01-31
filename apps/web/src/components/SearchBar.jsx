@@ -65,7 +65,7 @@ export const HeaderSearch = () => {
   return (
     <div
       className={`relative bg-white p-2 w-full md:w-80 min-h-[44px] flex justify-center items-center ${
-        showSuggestions ? "rounded-t-lg" : "rounded-lg"
+        showSuggestions ? "rounded-t-[25px]" : "rounded-full"
       }`}
       ref={containerRef}
     >

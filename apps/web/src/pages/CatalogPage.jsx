@@ -33,7 +33,7 @@ export const CatalogPage = () => {
     const fetchConfig = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/store/config`
+          `${import.meta.env.VITE_API_URL}/api/store/config`,
         );
         if (response.ok) {
           const data = await response.json();
@@ -100,7 +100,7 @@ export const CatalogPage = () => {
   const totalPages = Math.ceil(orderedProducts.length / itemsPerPage);
   const displayedProducts = orderedProducts.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   // Para mostrar el filtro activo: se extrae la query (category o search)
@@ -131,7 +131,9 @@ export const CatalogPage = () => {
 
   return (
     <div className="container mx-auto px-3 sm:px-4 py-4">
-      <h2 className="text-2xl sm:text-3xl font-semibold">Catálogo de Productos</h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold">
+        Catálogo de Productos
+      </h2>
       <Categories />
       <div className="flex flex-row justify-between items-center gap-3 my-4">
         <div className="flex flex-wrap items-center gap-2 sm:gap-4">
@@ -140,7 +142,7 @@ export const CatalogPage = () => {
               backgroundColor: "#fff2d2",
               color: "#000",
             }}
-            className="text-sm sm:text-base px-3 py-2 rounded-md flex items-center h-10 sm:h-12"
+            className="text-sm sm:text-base px-3 py-2 rounded-full flex items-center h-10 sm:h-12"
           >
             {orderedProducts.length} productos
           </div>
@@ -161,18 +163,22 @@ export const CatalogPage = () => {
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
         {loading ? (
           <div className="col-span-full flex justify-center items-center py-12">
-            <Spin 
+            <Spin
               size="large"
-              tip={<span className="text-[#262011] text-lg mt-4">Cargando productos...</span>}
+              tip={
+                <span className="text-[#262011] text-lg mt-4">
+                  Cargando productos...
+                </span>
+              }
             >
               <div style={{ width: "400px", height: "200px" }} />
             </Spin>
           </div>
         ) : (
           displayedProducts.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
+            <ProductCard
+              key={product.id}
+              product={product}
               showPrices={storeConfig.show_prices}
               onProductClick={handleProductClick}
             />
@@ -184,7 +190,7 @@ export const CatalogPage = () => {
           <button
             key={index}
             onClick={() => setCurrentPage(index + 1)}
-            className={`min-w-[44px] min-h-[44px] px-3 sm:px-4 py-2 border border-black text-sm sm:text-base transition-colors ${
+            className={`min-w-[44px] min-h-[44px] px-3 sm:px-4 py-2 border border-black text-sm sm:text-base transition-colors rounded-full ${
               currentPage === index + 1
                 ? "bg-[#262011] text-[#f5e1a4]"
                 : "bg-[#f5e1a4] text-[#262011] hover:bg-[#e6d294]"
@@ -197,7 +203,7 @@ export const CatalogPage = () => {
 
       {/* Selection Bar - sticky container */}
       <div className="sticky bottom-0 mt-8 -mx-3 sm:-mx-4 px-3 sm:px-4 pb-4">
-        <SelectionBar 
+        <SelectionBar
           onQuoteClick={() => setQuotationModalOpen(true)}
           showPrices={storeConfig.show_prices}
         />
