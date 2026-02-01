@@ -63,6 +63,17 @@ body {
   border-radius: 8px !important;
 }
 
+.phone-country-select .ant-select-selector {
+  height: 40px !important;
+  min-height: 40px;
+  align-items: center;
+}
+
+.phone-country-select .ant-select-selection-item,
+.phone-country-select .ant-select-selection-placeholder {
+  line-height: 40px;
+}
+
 .ant-btn {
   min-height: 44px;
   border: none !important;

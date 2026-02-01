@@ -149,6 +149,7 @@ export const ContactModal = ({ open, onClose }) => {
               value={form.countryCode}
               onChange={(value) => handleChange("countryCode", value)}
               size="large"
+              className="phone-country-select"
               style={{ width: COUNTRY_CODE_WIDTH, flexShrink: 0, height: 40 }}
               options={countryCodes.map((c) => ({
                 value: c.code,

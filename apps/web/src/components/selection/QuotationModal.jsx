@@ -241,6 +241,7 @@ export const QuotationModal = ({ open, onClose, storeConfig }) => {
             <Select
               value={form.countryCode}
               onChange={(value) => handleChange("countryCode", value)}
+              className="phone-country-select"
               style={{ width: COUNTRY_CODE_WIDTH, flexShrink: 0, height: 40 }}
               options={countryCodes.map((c) => ({
                 value: c.code,
