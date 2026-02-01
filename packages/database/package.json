@@ -17,7 +17,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "node prisma/seed.js",
-    "postinstall": "prisma generate || true",
+    "postinstall": "prisma generate && tsc || true",
     "build": "tsc",
     "lint": "eslint src",
     "clean": "rm -rf dist src/generated"
