@@ -45,6 +45,13 @@ const login = async (req, res) => {
       return res.status(400).json({ error: 'Contraseña requerida' });
     }
     
+    // Check if user has a password hash
+    if (!user.passwordHash) {
+      return res.status(401).json({ 
+        error: 'Usuario no configurado. Contacta al administrador.' 
+      });
+    }
+    
     // Verify password (temp or real)
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
