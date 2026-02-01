@@ -169,3 +169,36 @@ model trusted_devices {
   @@index([userId, deviceToken])
   @@schema("pancomido")
 }
+
+// ============================================
+// Consultation History Models
+// ============================================
+
+model consultations {
+  id             Int       @id @default(autoincrement())
+  customer_name  String
+  customer_phone String    // E.164 format with country code
+  total_amount   Decimal   @db.Decimal(10, 2)
+  product_count  Int       // Cached count for list display
+  created_at     DateTime  @default(now())
+
+  // Relations
+  items consultation_items[]
+
+  @@schema("pancomido")
+}
+
+model consultation_items {
+  id              Int     @id @default(autoincrement())
+  consultation_id Int
+  product_id      Int     // Reference only, no FK constraint (products may be deleted)
+  product_name    String  // Snapshot at consultation time
+  unit_price      Decimal @db.Decimal(10, 2) // Snapshot at consultation time
+  quantity        Int
+  subtotal        Decimal @db.Decimal(10, 2) // qty × unit_price
+
+  // Relations
+  consultation consultations @relation(fields: [consultation_id], references: [id], onDelete: Cascade)
+
+  @@schema("pancomido")
+}
