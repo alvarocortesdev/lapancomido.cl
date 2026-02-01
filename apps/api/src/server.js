@@ -29,17 +29,14 @@ const allowedOrigins = [
   'http://127.0.0.1:5173'
 ];
 
-// Patterns for Vercel preview deployments
-const vercelPreviewPatterns = [
-  /^https:\/\/lapancomido.*\.vercel\.app$/,
-  /^https:\/\/lapancomido-.*\.vercel\.app$/
-];
+// Patterns for Vercel preview deployments (any *.vercel.app with lapancomido in the name)
+const vercelPreviewPattern = /^https:\/\/.*lapancomido.*\.vercel\.app$/;
 
 function isAllowedOrigin(origin) {
   if (!origin) return true; // Allow requests with no origin (curl, Postman, mobile apps)
   if (allowedOrigins.includes(origin)) return true;
-  // Check Vercel preview patterns
-  return vercelPreviewPatterns.some(pattern => pattern.test(origin));
+  // Check Vercel preview pattern
+  return vercelPreviewPattern.test(origin);
 }
 
 app.use(cors({
