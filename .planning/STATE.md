@@ -5,22 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Los clientes pueden seleccionar productos del catálogo y enviar una consulta estructurada por WhatsApp al dueño en menos de 30 segundos.
-**Current focus:** Phase 6 - Panel Admin (COMPLETE)
+**Current focus:** Phase 7 - Historial de Consultas
 
 ## Current Position
 
-Phase: 6 of 9 (Panel Admin) - COMPLETE ✓
-Next: Phase 7 - Historial de Consultas
-Status: Phase 6 complete, admin panel fully functional
+Phase: 7 of 9 (Historial de Consultas)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-01 - Completed 07-01-PLAN.md
 
-Progress: [████████████████████░] 76%
+Progress: [█████████████████████░] 78%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: ~8 min
-- Total execution time: ~104 min
+- Total execution time: ~106 min
 
 **By Phase:**
 
@@ -30,6 +31,7 @@ Progress: [████████████████████░] 76%
 | 02 | 4 | 50 min | 12.5 min |
 | 03 | 3 | 15 min | 5 min |
 | 04 | 3 | 24 min | 8 min |
+| 07 | 1 | 2 min | 2 min |
 
 *Updated after each plan completion*
 
@@ -104,6 +106,11 @@ Recent decisions affecting current work:
 - [04-03]: Created vercel.json for each app (web, admin, api)
 - [04-03]: Updated admin shell with branded placeholder
 
+**Phase 7:**
+- [07-01]: No FK from consultation_items to products (products may be deleted, history remains)
+- [07-01]: Product name/price snapshotted at consultation time
+- [07-01]: Fire-and-forget pattern for non-blocking saves
+
 ### What's Working
 
 - ✅ Catálogo de productos con imágenes y precios
@@ -121,8 +128,9 @@ Recent decisions affecting current work:
 - ✅ Forms con touch targets 44px y font-size 16px
 - ✅ Conexión directa a Supabase
 - ✅ Codebase limpio sin código legacy de auth/cart/orders
-- ✅ Schema Prisma limpio (7 modelos activos)
+- ✅ Schema Prisma limpio (9 modelos activos - added consultations/consultation_items)
 - ✅ CORS configurado para subdominios
+- ✅ Consultas WhatsApp se guardan en BD con snapshots de productos
 
 ### Blockers/Concerns
 
@@ -133,7 +141,9 @@ Recent decisions affecting current work:
 **Research flags from research/SUMMARY.md:**
 - Phase 5 (OTP): Device fingerprinting libraries may need evaluation
 - Lighthouse 100/100/100/100: May need to accept 95+ if Ant Design tree-shaking insufficient
-- Quotation history retention: Schema design needs decision during Phase 7
+
+**Database push pending:**
+- Run `cd packages/database && npx prisma db push` when Supabase is accessible
 
 **Lint cleanup needed:**
 - 78 lint errors in web app (pre-existing)
@@ -143,7 +153,7 @@ Recent decisions affecting current work:
 ## What's Next
 
 ### Phase 7: Historial de Consultas
-- Plan 07-01: API y modelo para guardar consultas
+- ✅ Plan 07-01: API y modelo para guardar consultas (COMPLETE)
 - Plan 07-02: Vista admin de historial
 
 ### Upcoming Phases Summary
@@ -158,9 +168,9 @@ Recent decisions affecting current work:
 ## Session Continuity
 
 Last session: 2026-02-01
-Stopped at: Phase 6 complete - all admin CRUD implemented
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None
-Next action: Begin Phase 7 (Historial de Consultas)
+Next action: Execute 07-02-PLAN.md (Vista admin de historial)
 
 ### Pending Vercel Setup for Phase 4
 See `.planning/phases/04-arquitectura-split-limpieza/04-03-SUMMARY.md` for detailed instructions.

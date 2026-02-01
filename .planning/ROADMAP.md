@@ -171,7 +171,7 @@ Plans:
 **Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 07-01-PLAN.md — Schema + API endpoint + QuotationModal save (Wave 1)
+- [x] 07-01-PLAN.md — Schema + API endpoint + QuotationModal save (Wave 1) ✓
 - [ ] 07-02-PLAN.md — Admin consultations page + detail modal (Wave 2)
 
 ### Phase 8: Auditoría de Código
@@ -228,12 +228,12 @@ Plans:
 | 4. Arquitectura Split + Limpieza | 3/3 | Complete ✓ | 2026-02-01 |
 | 5. Autenticación OTP | 3/3 | Complete ✓ | 2026-02-01 |
 | 6. Panel Admin | 3/3 | Complete ✓ | 2026-02-01 |
-| 7. Historial de Consultas | 0/2 | Not started | - |
+| 7. Historial de Consultas | 1/2 | In progress | - |
 | 8. Auditoría de Código | 0/2 | Not started | - |
 | 9. SEO & Performance | 0/2 | Not started | - |
 
 **Total Plans:** 25
-**Completed:** 19/25 (76%)
+**Completed:** 20/25 (80%)
 **Total Requirements:** 69
 
 ---
