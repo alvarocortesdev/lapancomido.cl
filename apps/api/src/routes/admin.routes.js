@@ -177,6 +177,7 @@ const router = express.Router();
 const { requireAuth, requireAdmin } = require('../middlewares/requireAuth');
 const adminProductsController = require('../controllers/adminProducts.controller');
 const categoriesController = require('../controllers/categories.controller');
+const storeConfigController = require('../controllers/storeConfig.controller');
 
 // Apply auth middleware to all admin routes
 router.use(requireAuth, requireAdmin);
@@ -194,5 +195,9 @@ router.get('/categories', categoriesController.getAdminCategories);
 router.post('/categories', categoriesController.createCategory);
 router.put('/categories/:id', categoriesController.updateCategory);
 router.delete('/categories/:id', categoriesController.deleteCategory);
+
+// Store config routes
+router.get('/config', storeConfigController.getStoreConfig);
+router.put('/config', storeConfigController.updateStoreConfig);
 
 module.exports = router;
