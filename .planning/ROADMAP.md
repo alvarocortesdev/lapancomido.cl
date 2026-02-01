@@ -132,12 +132,12 @@ Plans:
   5. Dispositivo confiable mantiene sesión 30 días sin pedir OTP
   6. Rol dev tiene acceso completo, rol admin acceso limitado
 
-**Plans**: 3 plans
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 05-01-PLAN.md — Schema auth + seed usuarios + login básico con setupRequired (Wave 1)
-- [ ] 05-02-PLAN.md — OTP flow completo + device trust + email via Resend (Wave 2)
-- [ ] 05-03-PLAN.md — Middleware isDeveloper + LoginPage UI admin (Wave 3)
+- [ ] 05-01-PLAN.md — Schema auth + seed con temp passwords + setup flow con OTP email validation (Wave 1)
+- [ ] 05-02-PLAN.md — OTP login flow + device trust via httpOnly cookie + resend cooldowns (Wave 2)
+- [ ] 05-03-PLAN.md — Turnstile captcha + LoginPage UI + SettingsPage con logout-all (Wave 3)
 
 ### Phase 6: Panel Admin
 **Goal**: Admin puede gestionar productos, categorías y contenido del sitio
