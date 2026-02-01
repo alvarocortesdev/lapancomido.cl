@@ -1,7 +1,6 @@
 // src/layouts/MainLayout.jsx
 
 import { Outlet } from "react-router-dom";
-import { Marques } from "../components/Marques";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Credits } from "../components/Credits";
@@ -9,7 +8,6 @@ import { Credits } from "../components/Credits";
 export const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Marques />
       <Header />
       {/* Spacer para compensar header fijo en mobile */}
       <div className="h-16 md:hidden" />

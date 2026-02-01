@@ -4,137 +4,7 @@
  * @swagger
  * tags:
  *   - name: Admin
- *     description: Endpoints para administración de la aplicación
- *
- * /admin/dashboard:
- *   get:
- *     summary: Obtener el resumen de la tienda (ventas, stock y pedidos del mes)
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Resumen del dashboard.
- *       401:
- *         description: Token inválido o no proporcionado.
- *
- * /admin/orders/pending:
- *   get:
- *     summary: Listar los pedidos pendientes (no finalizados)
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de pedidos pendientes.
- *
- * /admin/orders/historical:
- *   get:
- *     summary: Listar los pedidos históricos (finalizados)
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de pedidos históricos.
- *
- * /admin/users:
- *   get:
- *     summary: Listar usuarios registrados
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de usuarios.
- *
- * /admin/users/{userId}/role:
- *   put:
- *     summary: Cambiar el rol de un usuario
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario.
- *     requestBody:
- *       description: Nuevo rol del usuario ("customer", "admin" o "developer")
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               role:
- *                 type: string
- *             example:
- *               role: "admin"
- *     responses:
- *       200:
- *         description: Rol actualizado.
- *       404:
- *         description: Usuario no encontrado.
- *
- * /admin/users/{userId}/disable:
- *   put:
- *     summary: Desactivar un usuario
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario a desactivar.
- *     responses:
- *       200:
- *         description: Usuario desactivado.
- *       404:
- *         description: Usuario no encontrado.
- *
- * /admin/users/{userId}/enable:
- *   put:
- *     summary: Habilitar (reactivar) un usuario
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario a habilitar.
- *     responses:
- *       200:
- *         description: Usuario habilitado.
- *       404:
- *         description: Usuario no encontrado.
- *
- * /admin/users/{userId}:
- *   delete:
- *     summary: Eliminar un usuario
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del usuario a eliminar.
- *     responses:
- *       200:
- *         description: Usuario eliminado.
- *       404:
- *         description: Usuario no encontrado.
+ *     description: Endpoints para administración de productos
  *
  * /admin/products:
  *   post:
@@ -287,44 +157,18 @@
 
 const express = require('express');
 const router = express.Router();
-const { validateToken } = require('../middlewares/validateToken');
-const isAdmin = require('../middlewares/isAdmin');
-const { getStoreSummary } = require('../controllers/store.controller');
 
-// Rutas existentes para dashboard, pedidos y usuarios...
-const adminDashboardController = require('../controllers/adminDashboard.controller');
-const orderController = require('../controllers/order.controller');
-const adminUsersController = require('../controllers/adminUsers.controller');
+// Note: Auth middleware will be implemented in Phase 5
+// For now, product management is available without auth
+// TODO: Phase 5 - Add validateToken and isAdmin middlewares
 
-// Agregamos las rutas para la gestión de productos en admin
 const adminProductsController = require('../controllers/adminProducts.controller');
 
-
-
-// Dashboard de administración
-router.get('/dashboard', validateToken, isAdmin, adminDashboardController.getDashboardSummary);
-
-// Pedidos pendientes e históricos para admin
-router.get('/orders/pending', validateToken, isAdmin, orderController.getAdminPendingOrders);
-router.get('/orders/historical', validateToken, isAdmin, orderController.getAdminHistoricalOrders);
-// Ruta para actualizar el estado de una orden (PUT)
-router.put("/orders/:orderId/status", validateToken, isAdmin, orderController.updateOrderStatus);
-// Ruta para obtener el resumen general de la tienda
-router.get("/dashboard/summary", validateToken, isAdmin, getStoreSummary);
-
-
-// Gestión de usuarios para admin
-router.get('/users', validateToken, isAdmin, adminUsersController.listUsers);
-router.put('/users/:userId/role', validateToken, isAdmin, adminUsersController.updateUserRole);
-router.put('/users/:userId/disable', validateToken, isAdmin, adminUsersController.disableUser);
-router.put('/users/:userId/enable', validateToken, isAdmin, adminUsersController.enableUser);
-router.delete('/users/:userId', validateToken, isAdmin, adminUsersController.deleteUser);
-
-// Rutas de productos para admin
-router.post('/products', validateToken, isAdmin, adminProductsController.createProduct);
-router.put('/products/:id', validateToken, isAdmin, adminProductsController.updateProductDetails);
-router.put('/products/:id/stock', validateToken, isAdmin, adminProductsController.updateStock);
-router.delete('/products', validateToken, isAdmin, adminProductsController.deleteMultipleProducts);
-router.get('/products', validateToken, isAdmin, adminProductsController.getAdminProducts);
+// Product management routes (used for catalog administration)
+router.post('/products', adminProductsController.createProduct);
+router.put('/products/:id', adminProductsController.updateProductDetails);
+router.put('/products/:id/stock', adminProductsController.updateStock);
+router.delete('/products', adminProductsController.deleteMultipleProducts);
+router.get('/products', adminProductsController.getAdminProducts);
 
 module.exports = router;
