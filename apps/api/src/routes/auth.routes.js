@@ -4,6 +4,7 @@ const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const authController = require('../controllers/auth.controller');
 const { validateToken } = require('../middlewares/validateToken');
+const verifyTurnstile = require('../middlewares/verifyTurnstile');
 
 // Rate limiting for auth endpoints (generous limit, actual OTP attempts tracked in DB)
 const authLimiter = rateLimit({
@@ -16,8 +17,8 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// First-time setup flow
-router.post('/login', authLimiter, authController.login);
+// First-time setup flow (Turnstile on login)
+router.post('/login', authLimiter, verifyTurnstile, authController.login);
 router.post('/initiate-setup', authLimiter, authController.initiateSetup);
 router.post('/verify-setup-otp', authLimiter, authController.verifySetupOTP);
 router.post('/complete-setup', authLimiter, authController.completeSetup);
