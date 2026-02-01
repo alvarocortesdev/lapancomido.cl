@@ -2,8 +2,10 @@
 // Run with: npx prisma db seed
 
 const { PrismaClient } = require('../src/generated/client');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
+const SALT_ROUNDS = 10;
 
 async function main() {
   console.log('🌱 Seeding database...');
@@ -176,6 +178,44 @@ async function main() {
 
     console.log(`✅ Created product: ${product.product}`);
   }
+
+  // ============================================
+  // Admin Users
+  // ============================================
+  console.log('👤 Seeding admin users...');
+  
+  // Temporary passwords for first login (users must change these)
+  const devTempPassword = await bcrypt.hash('dev2026!Temp', SALT_ROUNDS);
+  const adminTempPassword = await bcrypt.hash('admin2026!Temp', SALT_ROUNDS);
+  
+  const devUser = await prisma.users.upsert({
+    where: { username: 'dev' },
+    update: {},
+    create: {
+      username: 'dev',
+      role: 'developer',
+      passwordHash: devTempPassword,
+      tempPassword: 'dev2026!Temp', // Stored for reference, will be cleared after setup
+      passwordSetupRequired: true
+    }
+  });
+  
+  const adminUser = await prisma.users.upsert({
+    where: { username: 'admin' },
+    update: {},
+    create: {
+      username: 'admin',
+      role: 'admin',
+      passwordHash: adminTempPassword,
+      tempPassword: 'admin2026!Temp',
+      passwordSetupRequired: true
+    }
+  });
+  
+  console.log('✅ Seeded admin users:', { 
+    dev: { id: devUser.id, username: devUser.username, role: devUser.role, tempPassword: 'dev2026!Temp' },
+    admin: { id: adminUser.id, username: adminUser.username, role: adminUser.role, tempPassword: 'admin2026!Temp' }
+  });
 
   console.log('🌱 Seeding complete!');
 }

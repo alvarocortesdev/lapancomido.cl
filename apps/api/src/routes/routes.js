@@ -10,7 +10,9 @@ const uploadRoute = require('./uploadRoute');
 const categoriesRoutes = require('./categories.routes');
 const storeRoutes = require('./store.routes');
 const contactRoutes = require('./contact.routes');
+const authRoutes = require('./auth.routes');
 
+router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
 router.use('/admin', adminRoutes);
 router.use('/product-images', productImagesRoutes);
