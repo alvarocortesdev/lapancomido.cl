@@ -125,7 +125,7 @@ const getStoreConfig = async (req, res, next) => {
     if (!config) {
       config = await prisma.store_config.create({
         data: {
-          whatsapp_number: '56992800156', // Placeholder - admin must update
+          whatsapp_number: '56992800153', // Default WhatsApp number
           greeting: 'Hola! Hay pan? <3',
           show_prices: true
         }

@@ -13,7 +13,7 @@ async function main() {
     where: { id: 1 },
     update: {},
     create: {
-      whatsapp_number: '56912345678',
+      whatsapp_number: '56992800153',
       greeting: 'Hola! Hay pan? <3',
       show_prices: true,
     },
