@@ -1,33 +1,39 @@
 // src/pages/SiteContentPage.jsx
-import { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import * as siteContentApi from '../api/siteContent';
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import * as siteContentApi from "../api/siteContent";
+import ImageCropperModal from "../components/ImageCropperModal";
 
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 // Upload presets for different content types
 const UPLOAD_PRESETS = {
-  slider_desktop: import.meta.env.VITE_CLOUDINARY_PRESET_SLIDER_DESKTOP || 'lapancomido_slider_desktop',
-  slider_mobile: import.meta.env.VITE_CLOUDINARY_PRESET_SLIDER_MOBILE || 'lapancomido_slider_mobile',
-  gallery: import.meta.env.VITE_CLOUDINARY_PRESET_GALLERY || 'lapancomido_gallery',
-  video: import.meta.env.VITE_CLOUDINARY_PRESET_VIDEO || 'lapancomido_video',
+  slider_desktop:
+    import.meta.env.VITE_CLOUDINARY_PRESET_SLIDER_DESKTOP ||
+    "lapancomido_slider_desktop",
+  slider_mobile:
+    import.meta.env.VITE_CLOUDINARY_PRESET_SLIDER_MOBILE ||
+    "lapancomido_slider_mobile",
+  gallery:
+    import.meta.env.VITE_CLOUDINARY_PRESET_GALLERY || "lapancomido_gallery",
+  video: import.meta.env.VITE_CLOUDINARY_PRESET_VIDEO || "lapancomido_video",
 };
 
 const TABS = [
-  { id: 'slider', label: 'Slider' },
-  { id: 'gallery', label: 'Galería' },
-  { id: 'about', label: 'Elígenos' },
-  { id: 'footer', label: 'Footer' },
+  { id: "slider", label: "Slider" },
+  { id: "gallery", label: "Galería" },
+  { id: "about", label: "Elígenos" },
+  { id: "footer", label: "Footer" },
 ];
 
 export default function SiteContentPage() {
   const { token } = useAuth();
-  const [activeTab, setActiveTab] = useState('slider');
+  const [activeTab, setActiveTab] = useState("slider");
   const [content, setContent] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     loadContent();
@@ -36,11 +42,11 @@ export default function SiteContentPage() {
   async function loadContent() {
     try {
       setLoading(true);
-      setError('');
+      setError("");
       const data = await siteContentApi.getAllContent(token);
       // Convert array to object keyed by 'key'
       const contentMap = {};
-      data.forEach(item => {
+      data.forEach((item) => {
         contentMap[item.key] = item.value;
       });
       setContent(contentMap);
@@ -54,12 +60,12 @@ export default function SiteContentPage() {
   async function saveContent(key, value) {
     try {
       setSaving(true);
-      setError('');
-      setSuccess('');
+      setError("");
+      setSuccess("");
       await siteContentApi.updateContent(token, key, value);
-      setContent(prev => ({ ...prev, [key]: value }));
-      setSuccess('Guardado correctamente');
-      setTimeout(() => setSuccess(''), 3000);
+      setContent((prev) => ({ ...prev, [key]: value }));
+      setSuccess("Guardado correctamente");
+      setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -77,7 +83,9 @@ export default function SiteContentPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold text-[#262011] mb-6">Contenido del Sitio</h1>
+      <h1 className="text-2xl font-bold text-[#262011] mb-6">
+        Contenido del Sitio
+      </h1>
 
       {/* Status messages */}
       {error && (
@@ -93,14 +101,14 @@ export default function SiteContentPage() {
 
       {/* Tabs */}
       <div className="bg-white rounded-t-xl border-b flex overflow-x-auto">
-        {TABS.map(tab => (
+        {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-6 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
               activeTab === tab.id
-                ? 'border-[#262011] text-[#262011]'
-                : 'border-transparent text-[#262011]/60 hover:text-[#262011]'
+                ? "border-[#262011] text-[#262011]"
+                : "border-transparent text-[#262011]/60 hover:text-[#262011]"
             }`}
           >
             {tab.label}
@@ -110,31 +118,31 @@ export default function SiteContentPage() {
 
       {/* Tab content */}
       <div className="bg-white rounded-b-xl shadow-sm p-6">
-        {activeTab === 'slider' && (
-          <SliderEditor 
-            slides={content.home_slider || []} 
-            onSave={(slides) => saveContent('home_slider', slides)}
+        {activeTab === "slider" && (
+          <SliderEditor
+            slides={content.home_slider || []}
+            onSave={(slides) => saveContent("home_slider", slides)}
             saving={saving}
           />
         )}
-        {activeTab === 'gallery' && (
-          <GalleryEditor 
-            images={content.home_gallery || []} 
-            onSave={(images) => saveContent('home_gallery', images)}
+        {activeTab === "gallery" && (
+          <GalleryEditor
+            images={content.home_gallery || []}
+            onSave={(images) => saveContent("home_gallery", images)}
             saving={saving}
           />
         )}
-        {activeTab === 'about' && (
-          <AboutEditor 
-            data={content.about_section || {}} 
-            onSave={(data) => saveContent('about_section', data)}
+        {activeTab === "about" && (
+          <AboutEditor
+            data={content.about_section || {}}
+            onSave={(data) => saveContent("about_section", data)}
             saving={saving}
           />
         )}
-        {activeTab === 'footer' && (
-          <FooterEditor 
-            data={content.footer || {}} 
-            onSave={(data) => saveContent('footer', data)}
+        {activeTab === "footer" && (
+          <FooterEditor
+            data={content.footer || {}}
+            onSave={(data) => saveContent("footer", data)}
             saving={saving}
           />
         )}
@@ -147,6 +155,12 @@ export default function SiteContentPage() {
 function SliderEditor({ slides, onSave, saving }) {
   const [localSlides, setLocalSlides] = useState(slides);
   const [uploading, setUploading] = useState(null); // index of slide being uploaded
+  const [cropper, setCropper] = useState({
+    isOpen: false,
+    imageSrc: null,
+    initialAspectRatio: 1,
+    onComplete: null,
+  });
 
   useEffect(() => {
     setLocalSlides(slides);
@@ -154,37 +168,59 @@ function SliderEditor({ slides, onSave, saving }) {
 
   async function uploadImage(file, type) {
     if (!CLOUDINARY_CLOUD_NAME) {
-      throw new Error('Cloudinary no está configurado');
+      throw new Error("Cloudinary no está configurado");
     }
-    
-    const preset = type === 'desktop' ? UPLOAD_PRESETS.slider_desktop : UPLOAD_PRESETS.slider_mobile;
+
+    const preset =
+      type === "desktop"
+        ? UPLOAD_PRESETS.slider_desktop
+        : UPLOAD_PRESETS.slider_mobile;
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', preset);
-    formData.append('folder', 'slider');
+    formData.append("file", file);
+    formData.append("upload_preset", preset);
+    formData.append("folder", "slider");
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      { method: 'POST', body: formData }
+      { method: "POST", body: formData },
     );
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || 'Error al subir imagen');
+      throw new Error(err.error?.message || "Error al subir imagen");
     }
 
     return await response.json();
   }
 
-  async function handleImageUpload(index, type, e) {
+  function handleFileSelect(index, type, e) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Reset input
+    e.target.value = "";
+
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      setCropper({
+        isOpen: true,
+        imageSrc: reader.result,
+        initialAspectRatio: type === "desktop" ? 21 / 9 : 16 / 9,
+        onComplete: (blob) => handleCroppedUpload(blob, index, type),
+      });
+    });
+    reader.readAsDataURL(file);
+  }
+
+  async function handleCroppedUpload(blob, index, type) {
     try {
       setUploading(index);
+      const file = new File([blob], "cropped-image.jpg", {
+        type: "image/jpeg",
+      });
       const result = await uploadImage(file, type);
-      
-      setLocalSlides(prev => {
+
+      setLocalSlides((prev) => {
         const updated = [...prev];
         updated[index] = {
           ...updated[index],
@@ -200,7 +236,7 @@ function SliderEditor({ slides, onSave, saving }) {
   }
 
   function handleAltChange(index, alt) {
-    setLocalSlides(prev => {
+    setLocalSlides((prev) => {
       const updated = [...prev];
       updated[index] = { ...updated[index], alt };
       return updated;
@@ -208,22 +244,23 @@ function SliderEditor({ slides, onSave, saving }) {
   }
 
   function addSlide() {
-    setLocalSlides(prev => [...prev, { desktop: '', mobile: '', alt: '' }]);
+    setLocalSlides((prev) => [...prev, { desktop: "", mobile: "", alt: "" }]);
   }
 
   function removeSlide(index) {
-    if (confirm('¿Eliminar este slide?')) {
-      setLocalSlides(prev => prev.filter((_, i) => i !== index));
+    if (confirm("¿Eliminar este slide?")) {
+      setLocalSlides((prev) => prev.filter((_, i) => i !== index));
     }
   }
 
   function moveSlide(index, direction) {
     if (
-      (direction === -1 && index === 0) || 
+      (direction === -1 && index === 0) ||
       (direction === 1 && index === localSlides.length - 1)
-    ) return;
+    )
+      return;
 
-    setLocalSlides(prev => {
+    setLocalSlides((prev) => {
       const updated = [...prev];
       const temp = updated[index];
       updated[index] = updated[index + direction];
@@ -234,9 +271,19 @@ function SliderEditor({ slides, onSave, saving }) {
 
   return (
     <div className="space-y-6">
+      <ImageCropperModal
+        isOpen={cropper.isOpen}
+        onClose={() => setCropper((prev) => ({ ...prev, isOpen: false }))}
+        imageSrc={cropper.imageSrc}
+        onCropComplete={cropper.onComplete}
+        initialAspectRatio={cropper.initialAspectRatio}
+      />
+
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[#262011]">Slider Principal</h3>
+          <h3 className="text-lg font-semibold text-[#262011]">
+            Slider Principal
+          </h3>
           <p className="text-sm text-[#262011]/60">
             Imágenes del carrusel en la página de inicio
           </p>
@@ -253,7 +300,9 @@ function SliderEditor({ slides, onSave, saving }) {
         {localSlides.map((slide, index) => (
           <div key={index} className="border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="font-medium text-[#262011]">Slide {index + 1}</span>
+              <span className="font-medium text-[#262011]">
+                Slide {index + 1}
+              </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => moveSlide(index, -1)}
@@ -289,9 +338,9 @@ function SliderEditor({ slides, onSave, saving }) {
                 </label>
                 <div className="relative aspect-[21/9] bg-gray-100 rounded overflow-hidden">
                   {slide.desktop ? (
-                    <img 
-                      src={slide.desktop} 
-                      alt="Desktop preview" 
+                    <img
+                      src={slide.desktop}
+                      alt="Desktop preview"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -303,12 +352,12 @@ function SliderEditor({ slides, onSave, saving }) {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={e => handleImageUpload(index, 'desktop', e)}
+                      onChange={(e) => handleFileSelect(index, "desktop", e)}
                       className="hidden"
                       disabled={uploading === index}
                     />
                     <span className="text-white text-sm bg-black/50 px-3 py-1 rounded">
-                      {uploading === index ? 'Subiendo...' : 'Cambiar'}
+                      {uploading === index ? "Subiendo..." : "Cambiar"}
                     </span>
                   </label>
                 </div>
@@ -321,9 +370,9 @@ function SliderEditor({ slides, onSave, saving }) {
                 </label>
                 <div className="relative aspect-[16/9] bg-gray-100 rounded overflow-hidden">
                   {slide.mobile ? (
-                    <img 
-                      src={slide.mobile} 
-                      alt="Mobile preview" 
+                    <img
+                      src={slide.mobile}
+                      alt="Mobile preview"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -335,12 +384,12 @@ function SliderEditor({ slides, onSave, saving }) {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={e => handleImageUpload(index, 'mobile', e)}
+                      onChange={(e) => handleFileSelect(index, "mobile", e)}
                       className="hidden"
                       disabled={uploading === index}
                     />
                     <span className="text-white text-sm bg-black/50 px-3 py-1 rounded">
-                      {uploading === index ? 'Subiendo...' : 'Cambiar'}
+                      {uploading === index ? "Subiendo..." : "Cambiar"}
                     </span>
                   </label>
                 </div>
@@ -349,8 +398,8 @@ function SliderEditor({ slides, onSave, saving }) {
 
             <input
               type="text"
-              value={slide.alt || ''}
-              onChange={e => handleAltChange(index, e.target.value)}
+              value={slide.alt || ""}
+              onChange={(e) => handleAltChange(index, e.target.value)}
               className="w-full px-3 py-2 border border-gray-200 rounded text-sm"
               placeholder="Texto alternativo (alt)"
             />
@@ -370,7 +419,7 @@ function SliderEditor({ slides, onSave, saving }) {
           disabled={saving}
           className="px-6 py-3 bg-[#262011] text-[#F5E1A4] rounded font-medium hover:bg-[#262011]/90 disabled:opacity-50 min-h-[48px]"
         >
-          {saving ? 'Guardando...' : 'Guardar Slides'}
+          {saving ? "Guardando..." : "Guardar Slides"}
         </button>
       </div>
     </div>
@@ -381,6 +430,15 @@ function SliderEditor({ slides, onSave, saving }) {
 function GalleryEditor({ images, onSave, saving }) {
   const [localImages, setLocalImages] = useState(images);
   const [uploading, setUploading] = useState(null);
+  const [cropper, setCropper] = useState({
+    isOpen: false,
+    imageSrc: null,
+    initialAspectRatio: 1,
+    onComplete: null,
+  });
+  
+  const [pendingFiles, setPendingFiles] = useState([]);
+  const [processingQueue, setProcessingQueue] = useState(false);
 
   const MIN_IMAGES = 11;
 
@@ -388,38 +446,98 @@ function GalleryEditor({ images, onSave, saving }) {
     setLocalImages(images);
   }, [images]);
 
+  // Queue processing
+  useEffect(() => {
+    if (processingQueue && pendingFiles.length > 0 && !cropper.isOpen) {
+      const file = pendingFiles[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        setCropper({
+          isOpen: true,
+          imageSrc: reader.result,
+          initialAspectRatio: 1,
+          onComplete: (blob) => handleQueueUpload(blob),
+        });
+      };
+      reader.readAsDataURL(file);
+    } else if (processingQueue && pendingFiles.length === 0) {
+      setProcessingQueue(false);
+      setUploading(null);
+    }
+  }, [pendingFiles, processingQueue, cropper.isOpen]);
+
   async function uploadImage(file) {
     if (!CLOUDINARY_CLOUD_NAME) {
-      throw new Error('Cloudinary no está configurado');
+      throw new Error("Cloudinary no está configurado");
     }
-    
+
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', UPLOAD_PRESETS.gallery);
-    formData.append('folder', 'gallery');
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESETS.gallery);
+    formData.append("folder", "gallery");
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      { method: 'POST', body: formData }
+      { method: "POST", body: formData },
     );
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || 'Error al subir imagen');
+      throw new Error(err.error?.message || "Error al subir imagen");
     }
 
     return await response.json();
   }
 
-  async function handleImageUpload(index, e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  async function handleQueueUpload(blob) {
     try {
-      setUploading(index);
+      setUploading("queue");
+      const file = new File([blob], "gallery-image.jpg", { type: "image/jpeg" });
       const result = await uploadImage(file);
       
-      setLocalImages(prev => {
+      setLocalImages((prev) => [...prev, result.secure_url]);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setPendingFiles((prev) => prev.slice(1));
+      setCropper((prev) => ({ ...prev, isOpen: false }));
+    }
+  }
+
+  function handleAddImages(e) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    e.target.value = "";
+    setPendingFiles((prev) => [...prev, ...files]);
+    setProcessingQueue(true);
+  }
+
+  function handleReplaceSelect(index, e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCropper({
+        isOpen: true,
+        imageSrc: reader.result,
+        initialAspectRatio: 1,
+        onComplete: (blob) => handleReplaceUpload(blob, index),
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleReplaceUpload(blob, index) {
+    try {
+      setUploading(index);
+      setCropper((prev) => ({ ...prev, isOpen: false }));
+      
+      const file = new File([blob], "gallery-image.jpg", { type: "image/jpeg" });
+      const result = await uploadImage(file);
+      
+      setLocalImages((prev) => {
         const updated = [...prev];
         updated[index] = result.secure_url;
         return updated;
@@ -431,29 +549,13 @@ function GalleryEditor({ images, onSave, saving }) {
     }
   }
 
-  async function handleAddImage(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setUploading('new');
-      const result = await uploadImage(file);
-      setLocalImages(prev => [...prev, result.secure_url]);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setUploading(null);
-    }
-  }
-
   function removeImage(index) {
-    // Don't allow removing if we're at minimum
     const filledImages = localImages.filter(Boolean).length;
     if (filledImages <= MIN_IMAGES) {
       alert(`Debes mantener al menos ${MIN_IMAGES} imágenes en la galería`);
       return;
     }
-    setLocalImages(prev => prev.filter((_, i) => i !== index));
+    setLocalImages((prev) => prev.filter((_, i) => i !== index));
   }
 
   function handleSave() {
@@ -465,49 +567,72 @@ function GalleryEditor({ images, onSave, saving }) {
     onSave(filledImages);
   }
 
-  // Ensure we always have at least MIN_IMAGES slots
   const displayImages = [...localImages];
   while (displayImages.length < MIN_IMAGES) {
-    displayImages.push('');
+    displayImages.push("");
   }
 
   const filledCount = localImages.filter(Boolean).length;
 
   return (
     <div className="space-y-6">
+      <ImageCropperModal
+        isOpen={cropper.isOpen}
+        onClose={() => {
+          setCropper((prev) => ({ ...prev, isOpen: false }));
+          if (processingQueue) {
+             setPendingFiles((prev) => prev.slice(1));
+          }
+        }}
+        imageSrc={cropper.imageSrc}
+        onCropComplete={cropper.onComplete}
+        initialAspectRatio={cropper.initialAspectRatio}
+      />
+
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[#262011]">Galería de Fotos</h3>
+          <h3 className="text-lg font-semibold text-[#262011]">
+            Galería de Fotos
+          </h3>
           <p className="text-sm text-[#262011]/60">
-            Mínimo {MIN_IMAGES} imágenes cuadradas (1:1, 800x800). Actualmente: {filledCount}
+            Mínimo {MIN_IMAGES} imágenes cuadradas (1:1, 800x800). Actualmente:{" "}
+            {filledCount}
           </p>
         </div>
         <label className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm cursor-pointer">
           <input
             type="file"
             accept="image/*"
-            onChange={handleAddImage}
+            multiple
+            onChange={handleAddImages}
             className="hidden"
-            disabled={uploading === 'new'}
+            disabled={uploading === "queue" || processingQueue}
           />
-          {uploading === 'new' ? 'Subiendo...' : '+ Agregar Imagen'}
+          {uploading === "queue" || processingQueue ? "Procesando..." : "Agregar fotos"}
         </label>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {displayImages.map((img, index) => (
-          <div key={index} className="relative aspect-square bg-gray-100 rounded overflow-hidden group">
+          <div
+            key={index}
+            className="relative aspect-square bg-gray-100 rounded overflow-hidden group"
+          >
             {img ? (
               <>
-                <img 
-                  src={img} 
-                  alt={`Galería ${index + 1}`} 
+                <img
+                  src={img}
+                  alt={`Galería ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
                 <button
                   onClick={() => removeImage(index)}
                   className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-sm"
-                  title={filledCount <= MIN_IMAGES ? `Mínimo ${MIN_IMAGES} imágenes` : 'Eliminar'}
+                  title={
+                    filledCount <= MIN_IMAGES
+                      ? `Mínimo ${MIN_IMAGES} imágenes`
+                      : "Eliminar"
+                  }
                 >
                   ×
                 </button>
@@ -517,7 +642,7 @@ function GalleryEditor({ images, onSave, saving }) {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={e => handleImageUpload(index, e)}
+                  onChange={(e) => handleReplaceSelect(index, e)}
                   className="hidden"
                   disabled={uploading === index}
                 />
@@ -537,12 +662,12 @@ function GalleryEditor({ images, onSave, saving }) {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={e => handleImageUpload(index, e)}
+                  onChange={(e) => handleReplaceSelect(index, e)}
                   className="hidden"
                   disabled={uploading === index}
                 />
                 <span className="text-white text-sm bg-black/50 px-3 py-1 rounded">
-                  {uploading === index ? 'Subiendo...' : 'Cambiar'}
+                  {uploading === index ? "Subiendo..." : "Cambiar"}
                 </span>
               </label>
             )}
@@ -556,7 +681,7 @@ function GalleryEditor({ images, onSave, saving }) {
           disabled={saving || filledCount < MIN_IMAGES}
           className="px-6 py-3 bg-[#262011] text-[#F5E1A4] rounded font-medium hover:bg-[#262011]/90 disabled:opacity-50 min-h-[48px]"
         >
-          {saving ? 'Guardando...' : 'Guardar Galería'}
+          {saving ? "Guardando..." : "Guardar Galería"}
         </button>
       </div>
     </div>
@@ -566,44 +691,44 @@ function GalleryEditor({ images, onSave, saving }) {
 // ============ ABOUT/ELIGENOS EDITOR ============
 function AboutEditor({ data, onSave, saving }) {
   const [localData, setLocalData] = useState({
-    title: data.title || '',
-    content: data.content || '',
-    video: data.video || '',
+    title: data.title || "",
+    content: data.content || "",
+    video: data.video || "",
   });
   const [uploadingVideo, setUploadingVideo] = useState(false);
 
   useEffect(() => {
     setLocalData({
-      title: data.title || '',
-      content: data.content || '',
-      video: data.video || '',
+      title: data.title || "",
+      content: data.content || "",
+      video: data.video || "",
     });
   }, [data]);
 
   async function uploadVideo(file) {
     if (!CLOUDINARY_CLOUD_NAME) {
-      throw new Error('Cloudinary no está configurado');
+      throw new Error("Cloudinary no está configurado");
     }
 
     // Check file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      throw new Error('El video no puede superar 10MB');
+      throw new Error("El video no puede superar 10MB");
     }
-    
+
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', UPLOAD_PRESETS.video);
-    formData.append('folder', 'videos');
-    formData.append('resource_type', 'video');
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESETS.video);
+    formData.append("folder", "videos");
+    formData.append("resource_type", "video");
 
     const response = await fetch(
       `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`,
-      { method: 'POST', body: formData }
+      { method: "POST", body: formData },
     );
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || 'Error al subir video');
+      throw new Error(err.error?.message || "Error al subir video");
     }
 
     return await response.json();
@@ -616,7 +741,7 @@ function AboutEditor({ data, onSave, saving }) {
     try {
       setUploadingVideo(true);
       const result = await uploadVideo(file);
-      setLocalData(prev => ({ ...prev, video: result.secure_url }));
+      setLocalData((prev) => ({ ...prev, video: result.secure_url }));
     } catch (err) {
       alert(err.message);
     } finally {
@@ -625,7 +750,7 @@ function AboutEditor({ data, onSave, saving }) {
   }
 
   function handleChange(field, value) {
-    setLocalData(prev => ({ ...prev, [field]: value }));
+    setLocalData((prev) => ({ ...prev, [field]: value }));
   }
 
   // Simple formatting functions
@@ -636,7 +761,9 @@ function AboutEditor({ data, onSave, saving }) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-[#262011]">Sección "Elígenos"</h3>
+        <h3 className="text-lg font-semibold text-[#262011]">
+          Sección "Elígenos"
+        </h3>
         <p className="text-sm text-[#262011]/60">
           Título, contenido y video de la sección Elígenos
         </p>
@@ -650,7 +777,7 @@ function AboutEditor({ data, onSave, saving }) {
         <input
           type="text"
           value={localData.title}
-          onChange={e => handleChange('title', e.target.value)}
+          onChange={(e) => handleChange("title", e.target.value)}
           className="w-full px-4 py-3 border border-gray-200 rounded text-base"
           placeholder="Ej: Elígenos"
         />
@@ -666,7 +793,7 @@ function AboutEditor({ data, onSave, saving }) {
           <div className="flex gap-1 p-2 bg-gray-50 border-b">
             <button
               type="button"
-              onClick={() => execFormat('bold')}
+              onClick={() => execFormat("bold")}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-200 font-bold"
               title="Negrita"
             >
@@ -674,7 +801,7 @@ function AboutEditor({ data, onSave, saving }) {
             </button>
             <button
               type="button"
-              onClick={() => execFormat('italic')}
+              onClick={() => execFormat("italic")}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-200 italic"
               title="Cursiva"
             >
@@ -682,7 +809,7 @@ function AboutEditor({ data, onSave, saving }) {
             </button>
             <button
               type="button"
-              onClick={() => execFormat('underline')}
+              onClick={() => execFormat("underline")}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-gray-200 underline"
               title="Subrayado"
             >
@@ -693,11 +820,12 @@ function AboutEditor({ data, onSave, saving }) {
             contentEditable
             className="min-h-[150px] p-4 focus:outline-none"
             dangerouslySetInnerHTML={{ __html: localData.content }}
-            onBlur={e => handleChange('content', e.target.innerHTML)}
+            onBlur={(e) => handleChange("content", e.target.innerHTML)}
           />
         </div>
         <p className="text-xs text-[#262011]/50 mt-1">
-          Puedes usar negritas, cursiva y subrayado. Los saltos de línea se respetarán.
+          Puedes usar negritas, cursiva y subrayado. Los saltos de línea se
+          respetarán.
         </p>
       </div>
 
@@ -710,13 +838,13 @@ function AboutEditor({ data, onSave, saving }) {
           <div className="flex-1">
             {localData.video ? (
               <div className="relative">
-                <video 
-                  src={localData.video} 
-                  controls 
+                <video
+                  src={localData.video}
+                  controls
                   className="w-full max-w-md rounded"
                 />
                 <button
-                  onClick={() => handleChange('video', '')}
+                  onClick={() => handleChange("video", "")}
                   className="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white text-sm rounded"
                 >
                   Eliminar
@@ -751,7 +879,7 @@ function AboutEditor({ data, onSave, saving }) {
           disabled={saving || uploadingVideo}
           className="px-6 py-3 bg-[#262011] text-[#F5E1A4] rounded font-medium hover:bg-[#262011]/90 disabled:opacity-50 min-h-[48px]"
         >
-          {saving ? 'Guardando...' : 'Guardar Sección'}
+          {saving ? "Guardando..." : "Guardar Sección"}
         </button>
       </div>
     </div>
@@ -761,54 +889,59 @@ function AboutEditor({ data, onSave, saving }) {
 // ============ FOOTER EDITOR ============
 function FooterEditor({ data, onSave, saving }) {
   const [localData, setLocalData] = useState({
-    address: data.address || '',
-    addressUrl: data.addressUrl || '',
-    phone: data.phone || '',
-    phoneUrl: data.phoneUrl || '',
-    email: data.email || '',
-    instagram: data.instagram || '',
-    instagramUrl: data.instagramUrl || '',
+    address: data.address || "",
+    addressUrl: data.addressUrl || "",
+    phone: data.phone || "",
+    phoneUrl: data.phoneUrl || "",
+    email: data.email || "",
+    instagram: data.instagram || "",
+    instagramUrl: data.instagramUrl || "",
   });
 
   useEffect(() => {
     setLocalData({
-      address: data.address || '',
-      addressUrl: data.addressUrl || '',
-      phone: data.phone || '',
-      phoneUrl: data.phoneUrl || '',
-      email: data.email || '',
-      instagram: data.instagram || '',
-      instagramUrl: data.instagramUrl || '',
+      address: data.address || "",
+      addressUrl: data.addressUrl || "",
+      phone: data.phone || "",
+      phoneUrl: data.phoneUrl || "",
+      email: data.email || "",
+      instagram: data.instagram || "",
+      instagramUrl: data.instagramUrl || "",
     });
   }, [data]);
 
   function handleChange(field, value) {
-    setLocalData(prev => ({ ...prev, [field]: value }));
+    setLocalData((prev) => ({ ...prev, [field]: value }));
   }
 
   // Auto-generate URLs when appropriate
   function handlePhoneChange(value) {
-    handleChange('phone', value);
+    handleChange("phone", value);
     // Auto-generate WhatsApp URL if it looks like a Chilean number
-    const cleaned = value.replace(/\D/g, '');
+    const cleaned = value.replace(/\D/g, "");
     if (cleaned.length >= 9) {
-      handleChange('phoneUrl', `https://wa.me/${cleaned.startsWith('56') ? cleaned : '56' + cleaned}`);
+      handleChange(
+        "phoneUrl",
+        `https://wa.me/${cleaned.startsWith("56") ? cleaned : "56" + cleaned}`,
+      );
     }
   }
 
   function handleInstagramChange(value) {
-    handleChange('instagram', value);
+    handleChange("instagram", value);
     // Auto-generate Instagram URL
-    const handle = value.replace('@', '').trim();
+    const handle = value.replace("@", "").trim();
     if (handle) {
-      handleChange('instagramUrl', `https://instagram.com/${handle}`);
+      handleChange("instagramUrl", `https://instagram.com/${handle}`);
     }
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold text-[#262011]">Información del Footer</h3>
+        <h3 className="text-lg font-semibold text-[#262011]">
+          Información del Footer
+        </h3>
         <p className="text-sm text-[#262011]/60">
           Datos de contacto que aparecen en el pie de página
         </p>
@@ -823,7 +956,7 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="text"
             value={localData.address}
-            onChange={e => handleChange('address', e.target.value)}
+            onChange={(e) => handleChange("address", e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="Av. Ejemplo 1234, Santiago"
           />
@@ -835,7 +968,7 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="url"
             value={localData.addressUrl}
-            onChange={e => handleChange('addressUrl', e.target.value)}
+            onChange={(e) => handleChange("addressUrl", e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="https://maps.google.com/..."
           />
@@ -851,7 +984,7 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="tel"
             value={localData.phone}
-            onChange={e => handlePhoneChange(e.target.value)}
+            onChange={(e) => handlePhoneChange(e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="+56 9 1234 5678"
           />
@@ -863,11 +996,13 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="url"
             value={localData.phoneUrl}
-            onChange={e => handleChange('phoneUrl', e.target.value)}
+            onChange={(e) => handleChange("phoneUrl", e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="https://wa.me/56912345678"
           />
-          <p className="text-xs text-[#262011]/50 mt-1">Se genera automáticamente</p>
+          <p className="text-xs text-[#262011]/50 mt-1">
+            Se genera automáticamente
+          </p>
         </div>
       </div>
 
@@ -879,11 +1014,13 @@ function FooterEditor({ data, onSave, saving }) {
         <input
           type="email"
           value={localData.email}
-          onChange={e => handleChange('email', e.target.value)}
+          onChange={(e) => handleChange("email", e.target.value)}
           className="w-full px-4 py-3 border border-gray-200 rounded text-base"
           placeholder="contacto@lapancomido.cl"
         />
-        <p className="text-xs text-[#262011]/50 mt-1">El enlace mailto: se genera automáticamente</p>
+        <p className="text-xs text-[#262011]/50 mt-1">
+          El enlace mailto: se genera automáticamente
+        </p>
       </div>
 
       {/* Instagram */}
@@ -895,7 +1032,7 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="text"
             value={localData.instagram}
-            onChange={e => handleInstagramChange(e.target.value)}
+            onChange={(e) => handleInstagramChange(e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="@lapancomido"
           />
@@ -907,11 +1044,13 @@ function FooterEditor({ data, onSave, saving }) {
           <input
             type="url"
             value={localData.instagramUrl}
-            onChange={e => handleChange('instagramUrl', e.target.value)}
+            onChange={(e) => handleChange("instagramUrl", e.target.value)}
             className="w-full px-4 py-3 border border-gray-200 rounded text-base"
             placeholder="https://instagram.com/lapancomido"
           />
-          <p className="text-xs text-[#262011]/50 mt-1">Se genera automáticamente</p>
+          <p className="text-xs text-[#262011]/50 mt-1">
+            Se genera automáticamente
+          </p>
         </div>
       </div>
 
@@ -921,7 +1060,7 @@ function FooterEditor({ data, onSave, saving }) {
           disabled={saving}
           className="px-6 py-3 bg-[#262011] text-[#F5E1A4] rounded font-medium hover:bg-[#262011]/90 disabled:opacity-50 min-h-[48px]"
         >
-          {saving ? 'Guardando...' : 'Guardar Footer'}
+          {saving ? "Guardando..." : "Guardar Footer"}
         </button>
       </div>
     </div>

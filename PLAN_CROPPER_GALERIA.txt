@@ -1,0 +1,75 @@
+PLAN DE IMPLEMENTACIÓN (ADMIN)
+
+OBJETIVO
+- Agregar botón "Agregar fotos" que abra un modal y permita cargar múltiples imágenes en la galería.
+- Mantener la galería pública con comportamiento aleatorio (8 visibles, swap de 3 cada 10s).
+- Incorporar un editor de recorte/zoom antes de cualquier carga de imagen, con presets 1:1 (default), 21:9 y 16:9.
+
+ALCANCE ACTUAL DE CARGAS DE IMAGEN (ADMIN)
+- SiteContentPage: Slider (desktop y mobile) y Galería (home_gallery).
+- ProductForm: carga de imágenes de productos.
+- Cualquier otra carga de imagen directa a Cloudinary debe pasar por el editor.
+
+PROPUESTA DE ENFOQUE TÉCNICO
+1) Editor de recorte reutilizable
+   - Crear un componente reutilizable (p.ej. ImageCropperModal) en admin.
+   - Usar una librería de crop en React (p.ej. react-easy-crop) para permitir:
+     - zoom
+     - recorte con aspect ratio preset
+     - cambio de ratio en el modal (1:1, 21:9, 16:9)
+   - Al confirmar, generar un Blob/File recortado con canvas y retornarlo para upload.
+   - Mantener lógica de upload a Cloudinary existente, pero enviar el archivo recortado.
+
+2) Presets de ratio por contexto
+   - Galería y Productos: default 1:1, pero permitir cambiar a 21:9 o 16:9 si el usuario lo requiere.
+   - Slider:
+     - Desktop default 21:9
+     - Mobile default 16:9
+   - El preset activo debe inicializarse según el contexto y permitir cambio manual.
+
+3) Modal de carga múltiple para Galería
+   - Reemplazar el botón actual "+ Agregar Imagen" por "Agregar fotos" que abra modal.
+   - En modal: input type="file" multiple.
+   - Flujo recomendado:
+     - Selección múltiple → cola de archivos.
+     - Abrir cropper para cada archivo (secuencial).
+     - Al confirmar cada crop, subir a Cloudinary y agregar a la lista local.
+   - Al cerrar el modal, mantener cambios ya subidos en el estado local.
+
+4) Integración con cargas existentes
+   - SliderEditor:
+     - Al seleccionar imagen, abrir cropper con ratio preset según tipo (desktop/mobile).
+   - GalleryEditor:
+     - Para cada placeholder y para el botón de "Agregar fotos", pasar por cropper.
+   - ProductForm:
+     - Al seleccionar imágenes, pasar por cropper con preset 1:1.
+     - Para multi-upload, iterar archivos y abrir cropper por archivo.
+
+5) Mantener comportamiento aleatorio del frontend
+   - No modificar HomePage:
+     - 8 imágenes visibles en la grilla.
+     - Cada 10 segundos se reemplazan 3 imágenes al azar.
+
+DEPENDENCIAS A AGREGAR
+- Librería de cropper (p.ej. react-easy-crop) en apps/admin.
+- Utilidad para transformar el recorte a Blob/File usando canvas.
+
+PASOS DE IMPLEMENTACIÓN (TODO)
+1) Añadir la dependencia del cropper en apps/admin/package.json.
+2) Crear ImageCropperModal reutilizable con:
+   - Presets 1:1, 21:9, 16:9.
+   - Controles de zoom.
+   - Botones “Cancelar” y “Usar recorte”.
+3) Agregar helper de canvas para exportar el recorte a Blob/File.
+4) Integrar el modal en:
+   - SliderEditor (desktop/mobile).
+   - GalleryEditor (placeholders + modal de multi-upload).
+   - ProductForm (multi-upload secuencial).
+5) Ajustar GalleryEditor:
+   - Crear botón “Agregar fotos” que abra modal.
+   - Soportar múltiples archivos y recorte por cada uno.
+6) Probar flujos:
+   - Slider desktop/mobile con recorte correcto.
+   - Galería con subida múltiple.
+   - Productos con subida múltiple.
+7) Lint y build en el monorepo antes de commit.
