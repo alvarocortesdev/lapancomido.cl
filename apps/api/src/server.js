@@ -41,7 +41,8 @@ function isAllowedOrigin(origin) {
 app.use(cors({
   origin: function(origin, callback) {
     if (isAllowedOrigin(origin)) {
-      callback(null, true);
+      // Return the actual origin to set correct Access-Control-Allow-Origin header
+      callback(null, origin || true);
     } else {
       console.warn(`CORS blocked request from: ${origin}`);
       callback(new Error('Not allowed by CORS'));
