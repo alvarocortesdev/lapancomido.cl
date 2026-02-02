@@ -36,8 +36,12 @@ const getProducts = async (req, res, next) => {
             where,
             include: {
                 images: {
-                    take: 1,
                     orderBy: { id: 'asc' },
+                },
+                categories_products: {
+                    include: {
+                        category: true,
+                    },
                 },
             },
             orderBy: { id: 'asc' },
@@ -58,6 +62,8 @@ const getProducts = async (req, res, next) => {
             created_at: p.created_at,
             updated_at: p.updated_at,
             url_img: p.images[0]?.url_img || null,
+            images: p.images.map((img) => img.url_img),
+            categories: p.categories_products.map((cp) => cp.category.category),
         }));
         
         res.json(result);
