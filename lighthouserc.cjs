@@ -1,4 +1,4 @@
-// lighthouserc.js
+// lighthouserc.cjs
 module.exports = {
   ci: {
     collect: {
