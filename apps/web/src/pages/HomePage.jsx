@@ -10,7 +10,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 /* Importar Cloudinary config */
-import { getGalleryImageUrl } from "../config/cloudinary";
+import { getGalleryImageUrl, optimizeCloudinaryUrl } from "../config/cloudinary";
 
 /* Importar Site Content Context */
 import { useSiteContent } from "../context/SiteContentContext";
@@ -114,9 +114,7 @@ const HomePage = () => {
   // Helper to get image URL - handles both full URLs and image names
   const getImageUrl = (img) => {
     if (!img) return '';
-    // If it's a full URL, use it directly
-    if (img.startsWith('http')) return img;
-    // Otherwise, treat as gallery image name
+    if (img.startsWith('http')) return optimizeCloudinaryUrl(img, { width: 800 });
     return getGalleryImageUrl(img);
   };
 
@@ -140,29 +138,42 @@ const HomePage = () => {
             className="w-full aspect-[16/9] sm:aspect-[21/9] md:aspect-[21/9] lg:aspect-[21/9] sm:rounded-lg overflow-hidden"
             style={{ "--swiper-theme-color": "#262011" }}
           >
-            {slides.map((slide, index) => (
-              <SwiperSlide key={index}>
-                {isMobile ? (
-                  <img
-                    src={slide.mobile || slide.desktop || slide.url}
-                    alt={slide.alt || `Slide ${index + 1}`}
-                    width="640"
-                    height="360"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src={slide.desktop || slide.url}
-                    alt={slide.alt || `Slide ${index + 1}`}
-                    width="1200"
-                    height="514"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    className="w-full h-full object-contain"
-                  />
-                )}
-              </SwiperSlide>
-            ))}
+            {slides.map((slide, index) => {
+              const mobileSrc = optimizeCloudinaryUrl(
+                slide.mobile || slide.desktop || slide.url,
+                { width: 640 },
+              );
+              const desktopSrc = optimizeCloudinaryUrl(slide.desktop || slide.url, {
+                width: 1200,
+              });
+              const fetchPriority = index === 0 ? "high" : "auto";
+
+              return (
+                <SwiperSlide key={index}>
+                  {isMobile ? (
+                    <img
+                      src={mobileSrc}
+                      alt={slide.alt || `Slide ${index + 1}`}
+                      width="640"
+                      height="360"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={fetchPriority}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={desktopSrc}
+                      alt={slide.alt || `Slide ${index + 1}`}
+                      width="1200"
+                      height="514"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={fetchPriority}
+                      className="w-full h-full object-contain"
+                    />
+                  )}
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </section>
 

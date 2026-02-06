@@ -33,6 +33,19 @@ export function cloudinaryUrl(publicId, options = {}) {
   return `${BASE_URL}/${transforms.join(',')}/${publicId}`;
 }
 
+export function optimizeCloudinaryUrl(url, options = {}) {
+  if (!url || !url.includes('/image/upload/')) return url;
+  const [prefix, suffix] = url.split('/image/upload/');
+  if (!suffix) return url;
+  const hasTransforms = /^(f_|q_|w_|h_|c_)/.test(suffix);
+  if (hasTransforms) return url;
+  const transforms = ['f_auto', 'q_auto'];
+  if (options.width) transforms.push(`w_${options.width}`);
+  if (options.height) transforms.push(`h_${options.height}`);
+  if (options.crop) transforms.push(`c_${options.crop}`);
+  return `${prefix}/image/upload/${transforms.join(',')}/${suffix}`;
+}
+
 // Pre-built URLs for brand assets
 export const BRAND = {
   logoHeader: `${BASE_URL}/f_auto,q_auto,h_200/${FOLDERS.brand}/logoWeb_cortado`,
