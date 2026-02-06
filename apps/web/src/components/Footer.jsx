@@ -6,6 +6,7 @@ import { FaInstagram } from "react-icons/fa6";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { LuPhone } from "react-icons/lu";
 import { SlLocationPin } from "react-icons/sl";
+import { toast } from "react-toastify";
 
 export const Footer = () => {
   const { content } = useSiteContent();
@@ -59,15 +60,16 @@ export const Footer = () => {
                 <LuPhone className="flex-shrink-0" />
                 <span>{phone}</span>
               </a>
-              <a
-                href={`mailto:${email}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 py-1 hover:underline"
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(email);
+                  toast.success("Correo copiado");
+                }}
+                className="flex items-center gap-2 py-1 hover:underline cursor-pointer"
               >
                 <MdOutlineMailOutline className="flex-shrink-0" />
                 <span>{email}</span>
-              </a>
+              </button>
               <a
                 href={instagramUrl}
                 target="_blank"
@@ -121,15 +123,16 @@ export const Footer = () => {
                   <LuPhone className="flex-shrink-0" />
                   <span>{phone}</span>
                 </a>
-                <a
-                  href={`mailto:${email}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:underline"
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(email);
+                    toast.success("Correo copiado");
+                  }}
+                  className="flex items-center gap-2 hover:underline cursor-pointer"
                 >
                   <MdOutlineMailOutline className="flex-shrink-0" />
                   <span>{email}</span>
-                </a>
+                </button>
                 <a
                   href={instagramUrl}
                   target="_blank"
