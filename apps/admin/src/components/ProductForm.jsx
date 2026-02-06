@@ -1,6 +1,6 @@
 // src/components/ProductForm.jsx
 import { useState, useEffect } from "react";
-import ImageCropperModal from "./ImageCropperModal";
+
 
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
@@ -111,9 +111,7 @@ export default function ProductForm({
 
   async function handleQueueUpload(blob) {
     try {
-      const file = new File([blob], "product-image.jpg", {
-        type: "image/jpeg",
-      });
+      const file = new File([blob], "product-image.jpg", { type: "image/jpeg" });
 
       const formDataUpload = new FormData();
       formDataUpload.append("file", file);
@@ -122,7 +120,7 @@ export default function ProductForm({
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-        { method: "POST", body: formDataUpload },
+        { method: "POST", body: formDataUpload }
       );
 
       if (!response.ok) throw new Error("Error al subir imagen");

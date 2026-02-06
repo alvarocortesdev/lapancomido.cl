@@ -11,7 +11,7 @@ export default [
         ...globals.node,
         ...globals.commonjs,
       },
-      sourceType: 'commonjs',
+      sourceType: 'module',
     },
     rules: {
       ...js.configs.recommended.rules,

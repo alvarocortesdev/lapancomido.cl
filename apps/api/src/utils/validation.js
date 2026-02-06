@@ -26,7 +26,7 @@ function validatePassword(password) {
   if (!/[a-z]/.test(password)) {
     errors.push('Debe incluir al menos 1 minúscula');
   }
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
     errors.push('Debe incluir al menos 1 caracter especial (!@#$%^&*...)');
   }
   
