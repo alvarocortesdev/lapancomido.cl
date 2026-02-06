@@ -71,12 +71,12 @@ app.use('/api', routes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware 404 para rutas no definidas
-app.use((req, res, next) => {
+app.use((req, res, _next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
 // Middleware de manejo de errores
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Algo salió mal en el servidor.' });
 });

@@ -60,7 +60,7 @@ router.post('/save-images', validateToken, isAdmin, async (req, res, next) => {
         }
 
         // Insert images using Prisma
-        const insertedImages = await prisma.product_img.createMany({
+        await prisma.product_img.createMany({
             data: validImages.map(img => ({
                 id_product: productId,
                 url_img: img.url || img.secure_url,

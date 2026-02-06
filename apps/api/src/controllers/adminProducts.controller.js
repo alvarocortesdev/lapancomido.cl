@@ -164,7 +164,7 @@ const updateProductDetails = async (req, res, next) => {
     } = req.body;
 
     // Update basic product data
-    const updatedProduct = await prisma.products.update({
+    await prisma.products.update({
       where: { id: productId },
       data: {
         product,
@@ -214,7 +214,7 @@ const updateProductDetails = async (req, res, next) => {
     `;
 
     // Handle images if provided
-    if (req.body.hasOwnProperty('images')) {
+    if (Object.hasOwn(req.body, 'images')) {
       // Get current images
       const currentImages = await prisma.product_img.findMany({
         where: { id_product: productId },

@@ -1,6 +1,6 @@
 // src/pages/HomePage.jsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 /* Import Swiper */
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,7 +16,6 @@ import { getGalleryImageUrl } from "../config/cloudinary";
 import { useSiteContent } from "../context/SiteContentContext";
 
 /* Importar Categorías FakeAPI */
-import { getCategories } from "../helpers/getProductData.helper"; // Simulación de datos
 import { Categories } from "../components/Categories";
 
 /* Importar Framer Motion */
@@ -26,7 +25,7 @@ export const HomePage = () => {
   /* Get site content from context */
   const { content } = useSiteContent();
   const slides = content.home_slider || [];
-  const allImages = content.home_gallery || [];
+  const allImages = useMemo(() => content.home_gallery || [], [content.home_gallery]);
   const aboutSection = content.about_section || {};
 
   /* Lógica BentoGrid dinámico con transiciones */
@@ -103,11 +102,6 @@ export const HomePage = () => {
     return () => clearInterval(interval);
   }, [displayedImages.length, allImages, previousSwapPositions]);
 
-  /* Lógica Categorías */
-  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    getCategories().then(setCategories);
-  }, []);
 
   // Helper to get image URL - handles both full URLs and image names
   const getImageUrl = (img) => {

@@ -9,10 +9,9 @@ import { formatCLP } from "../../helpers/formatPrice.helper";
 import { generateWhatsAppLink } from "../../helpers/whatsapp.helper";
 import { QuantityControl } from "../catalog/QuantityControl";
 import { 
-  formatChileanPhone, 
-  unformatPhone, 
-  isValidChileanPhone,
-  countryCodes 
+  formatChileanPhone,
+  unformatPhone,
+  countryCodes
 } from "../../helpers/formatPhone.helper";
 
 const { TextArea } = Input;

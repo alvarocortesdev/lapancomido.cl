@@ -30,12 +30,8 @@ const uploadImage = (fileBuffer, mimetype, folder = 'productos') => {
  * @returns {Promise<Object>} - Resultado de la eliminación.
  */
 const deleteImage = async (publicId) => {
-    try {
-        const result = await cloudinary.uploader.destroy(publicId);
-        return result;
-    } catch (error) {
-        throw error;
-    }
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
 };
 
 export { uploadImage, deleteImage };
