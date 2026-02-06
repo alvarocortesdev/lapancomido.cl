@@ -29,7 +29,9 @@ export const Header = () => {
               <img
                 src={BRAND.logoHeader}
                 alt="Pan Comido"
-                className="h-14 sm:h-16 md:h-24 w-auto"
+                width="600"
+                height="200"
+                className="h-14 sm:h-16 md:h-24 w-auto object-contain"
               />
             </Link>
           </div>
