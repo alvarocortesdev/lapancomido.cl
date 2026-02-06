@@ -37,6 +37,7 @@ export default function SiteContentPage() {
 
   useEffect(() => {
     loadContent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   async function loadContent() {
@@ -465,6 +466,7 @@ function GalleryEditor({ images, onSave, saving }) {
       setProcessingQueue(false);
       setUploading(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingFiles, processingQueue, cropper.isOpen]);
 
   async function uploadImage(file) {

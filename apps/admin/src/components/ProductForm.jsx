@@ -51,6 +51,7 @@ export default function ProductForm({
       setProcessingQueue(false);
       setUploading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingFiles, processingQueue, cropper.isOpen]);
 
   useEffect(() => {

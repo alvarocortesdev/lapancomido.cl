@@ -10,8 +10,8 @@ export default function ProductCreatePage({ onBack, onSuccess }) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    // Load existing categories for suggestions
     loadCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function loadCategories() {

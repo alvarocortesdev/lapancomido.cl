@@ -14,6 +14,7 @@ export default function ProductsPage({ onEdit, onCreate }) {
 
   useEffect(() => {
     loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   async function loadProducts() {

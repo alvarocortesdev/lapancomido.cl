@@ -57,6 +57,7 @@ export default function ConsultationsPage() {
 
   useEffect(() => {
     loadConsultations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current, dateRange, searchName]);
 
   const handleTableChange = (pag) => {
